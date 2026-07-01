@@ -1,0 +1,37 @@
+# macOS
+.DS_Store
+
+# iCloud placeholder files
+*.icloud
+
+# Secrets / LLM API keys (never commit these)
+.env
+.env.*
+!.env.example
+secrets.json
+*.key
+
+# Claude Code: settings stay local; only commands and agents are shared
+.claude/settings.json
+.claude/settings.local.json
+CLAUDE.local.md
+
+# Reference PDFs (large binaries; summarize in Literature/ instead)
+*.pdf
+
+# --- Uncomment when code lands in this repo ---
+# __pycache__/
+# *.py[cod]
+# .venv/
+# venv/
+# .ipynb_checkpoints/
+# .pytest_cache/
+# .ruff_cache/
+# .mypy_cache/
+# *.egg-info/
+# /outputs/
+# /results/runs/
+
+# Editors
+.vscode/
+.idea/

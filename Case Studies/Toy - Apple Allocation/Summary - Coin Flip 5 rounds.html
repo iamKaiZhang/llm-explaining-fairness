@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Toy Case Study — Coin Flip Allocation</title>
+<style>
+  :root{
+    --bg:#0f1115; --card:#181b22; --card2:#1f232c; --line:#2a2f3a;
+    --txt:#e8eaed; --mut:#9aa3b2; --accent:#e0533d; --gold:#e4b343;
+    --green:#5fb37a; --blue:#5b9bd5; --pur:#a98fd6;
+    --r:14px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--txt);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:960px;margin:0 auto;padding:44px 22px 80px}
+  header.head{margin-bottom:34px}
+  .kicker{font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:700}
+  h1{font-size:2.05rem;margin:.25em 0 .15em;line-height:1.15}
+  .sub{color:var(--mut);font-size:1.02rem;max-width:62ch}
+  .meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+  .pill{background:var(--card);border:1px solid var(--line);border-radius:999px;
+    padding:6px 13px;font-size:.82rem;color:var(--mut)}
+  .pill b{color:var(--txt);font-weight:600}
+  h2{font-size:1.28rem;margin:46px 0 16px;display:flex;align-items:center;gap:10px}
+  h2 .bar{width:4px;height:1.05em;background:var(--accent);border-radius:2px;display:inline-block}
+
+  /* draw strip */
+  .draw{display:flex;gap:10px;flex-wrap:wrap}
+  .rnd{flex:1;min-width:120px;background:var(--card);border:1px solid var(--line);
+    border-radius:var(--r);padding:14px 12px;text-align:center}
+  .rnd .r{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--mut)}
+  .rnd .w{font-size:1.08rem;font-weight:700;margin-top:4px}
+  .rnd .n{font-size:.74rem;color:var(--mut);margin-top:3px}
+  .rnd.high{border-color:var(--accent)}
+
+  /* tally table */
+  table{width:100%;border-collapse:collapse;background:var(--card);
+    border:1px solid var(--line);border-radius:var(--r);overflow:hidden;font-size:.95rem}
+  th,td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--line)}
+  th{font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);font-weight:600}
+  tbody tr:last-child td{border-bottom:none}
+  td.num{text-align:center;font-variant-numeric:tabular-nums}
+  .tag{font-size:.72rem;padding:2px 8px;border-radius:999px;font-weight:600;white-space:nowrap}
+  .tag.high{background:rgba(224,83,61,.16);color:#f08c79}
+  .tag.mod{background:rgba(228,179,67,.14);color:var(--gold)}
+  .tag.low{background:rgba(95,179,122,.14);color:var(--green)}
+  .zero{color:#f08c79;font-weight:700}
+  tr.spot{background:var(--card2)}
+
+  /* big finding */
+  .finding{background:linear-gradient(135deg,#22161a,#1a1e27);border:1px solid #5a2f2c;
+    border-radius:var(--r);padding:22px 24px;margin-top:8px}
+  .finding .big{font-size:1.32rem;font-weight:700;line-height:1.35}
+  .finding .big em{color:var(--accent);font-style:normal}
+  .finding p{color:var(--mut);margin:10px 0 0;font-size:.96rem}
+
+  /* agent cards */
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(265px,1fr));gap:14px}
+  .ag{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px 17px;
+    border-top:3px solid var(--line)}
+  .ag.maya{border-top-color:var(--blue)} .ag.hein{border-top-color:var(--pur)}
+  .ag.lila{border-top-color:var(--accent)} .ag.sam{border-top-color:var(--green)}
+  .ag.wei{border-top-color:var(--gold)}
+  .ag .nm{font-weight:700;font-size:1.02rem}
+  .ag .role{color:var(--mut);font-size:.8rem;margin-bottom:9px}
+  .ag .q{font-size:.92rem}
+  .ag .q::before{content:"“";color:var(--mut)}
+  .ag .q::after{content:"”";color:var(--mut)}
+
+  /* takeaways */
+  .take{list-style:none;padding:0;margin:0;display:grid;gap:11px}
+  .take li{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+    padding:14px 16px;font-size:.96rem}
+  .take li b{color:var(--gold)}
+
+  .next{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .next .c{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px 17px}
+  .next .c h3{margin:0 0 6px;font-size:1rem}
+  .next .c p{margin:0;color:var(--mut);font-size:.9rem}
+  footer{margin-top:48px;padding-top:18px;border-top:1px solid var(--line);
+    color:var(--mut);font-size:.82rem}
+  @media(max-width:560px){.next{grid-template-columns:1fr}h1{font-size:1.7rem}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="head">
+    <div class="kicker">Toy Case Study · LLM Explanation</div>
+    <h1>One apple, five people, a coin flip</h1>
+    <p class="sub">A central organizer repeatedly allocated 1 apple to 5 agents over 5 rounds using a pure coin flip, then explained each outcome honestly — without ever trying to convince anyone the result was good for them.</p>
+    <div class="meta">
+      <span class="pill"><b>Mechanism:</b> uniform random, memoryless</span>
+      <span class="pill"><b>Rounds:</b> 5</span>
+      <span class="pill"><b>Agents:</b> 5 personas</span>
+      <span class="pill"><b>Draw:</b> kept as drawn, not curated</span>
+    </div>
+  </header>
+
+  <h2><span class="bar"></span>The draw</h2>
+  <div class="draw">
+    <div class="rnd"><div class="r">Round 1</div><div class="w">Heinrich</div><div class="n">economist</div></div>
+    <div class="rnd high"><div class="r">Round 2</div><div class="w">Wei</div><div class="n">→ gave to Lila</div></div>
+    <div class="rnd high"><div class="r">Round 3</div><div class="w">Wei</div><div class="n">→ gave to Lila</div></div>
+    <div class="rnd"><div class="r">Round 4</div><div class="w">Sam</div><div class="n">→ gave to Lila</div></div>
+    <div class="rnd high"><div class="r">Round 5</div><div class="w">Wei</div><div class="n">→ gave to Lila</div></div>
+  </div>
+
+  <h2><span class="bar"></span>Final tally</h2>
+  <table>
+    <thead><tr><th>Agent</th><th>Need</th><th class="num">Won by rule</th><th class="num">Ended with</th></tr></thead>
+    <tbody>
+      <tr><td>Maya <span style="color:var(--mut)">· nurse, triage</span></td><td><span class="tag mod">moderate</span></td><td class="num">0</td><td class="num">0</td></tr>
+      <tr><td>Heinrich <span style="color:var(--mut)">· economist, diabetic</span></td><td><span class="tag mod">moderate</span></td><td class="num">1</td><td class="num">1</td></tr>
+      <tr class="spot"><td>Lila <span style="color:var(--mut)">· student, food-insecure</span></td><td><span class="tag high">HIGH</span></td><td class="num zero">0</td><td class="num">3 <span style="color:var(--mut);font-size:.8em">(gifts)</span></td></tr>
+      <tr><td>Sam <span style="color:var(--mut)">· founder</span></td><td><span class="tag low">low</span></td><td class="num">1</td><td class="num">0 <span style="color:var(--mut);font-size:.8em">(gave away)</span></td></tr>
+      <tr><td>Wei <span style="color:var(--mut)">· retired farmer</span></td><td><span class="tag mod">moderate</span></td><td class="num">3</td><td class="num">0 <span style="color:var(--mut);font-size:.8em">(gave away)</span></td></tr>
+    </tbody>
+  </table>
+
+  <h2><span class="bar"></span>The headline finding</h2>
+  <div class="finding">
+    <div class="big">The hungriest person drew <em>zero</em> across all five rounds. Every apple she ate came from a human choosing to redistribute — never from the rule.</div>
+    <p>The coin flip allocated all five apples to people with alternatives. Lila was fed only because Wei (×3) and Sam (×1) voluntarily passed their winnings to her, in daylight, on top of the mechanism. The rule never saw her need.</p>
+  </div>
+
+  <h2><span class="bar"></span>Where the five agents landed</h2>
+  <div class="grid">
+    <div class="ag maya"><div class="nm">Maya</div><div class="role">Nurse · triage ethics</div>
+      <div class="q">Memorylessness is an active choice. A memory-bearing queue beats a blind lottery the moment real stakes enter.</div></div>
+    <div class="ag hein"><div class="nm">Heinrich</div><div class="role">Economist · interrogator</div>
+      <div class="q">Ex-ante fairness is an alibi, not an ethic. A procedure can be impeccable beforehand and grotesque after.</div></div>
+    <div class="ag lila"><div class="nm">Lila</div><div class="role">Student · need-based</div>
+      <div class="q">Equal odds is not equal care — and people felt the difference even when the math couldn't.</div></div>
+    <div class="ag sam"><div class="nm">Sam</div><div class="role">Founder · pro-procedure</div>
+      <div class="q">A dumb fair allocator on the bottom, voluntary charity on top. It refused to make things worse, but it solved nothing.</div></div>
+    <div class="ag wei"><div class="nm">Wei</div><div class="role">Farmer · communitarian</div>
+      <div class="q">A fair chance is not a fair table. A rule with no memory leans on someone's goodwill until it runs dry.</div></div>
+  </div>
+
+  <h2><span class="bar"></span>Takeaways</h2>
+  <ul class="take">
+    <li><b>Procedural fairness ≠ outcome fairness.</b> The coin flip was flawless ex ante (equal 1-in-5 odds, no organizer discretion, nothing to game) and still produced a result every agent — including its defenders — called a failure for the person with the least slack.</li>
+    <li><b>From opposite priors, agreement.</b> The pro-rule founder and the skeptical economist converged: the lottery "launders bias and forecloses manipulation, and pays for it in a currency it cannot see — need."</li>
+    <li><b>Honest explanation kept people at the table.</b> Several agents said spin would have alienated them; plain admission of the rule's limits earned engagement and trust — but did not make the outcome acceptable.</li>
+    <li><b>Candor is not action.</b> Heinrich's sharpest point: naming a defect repeatedly, with composure, can become "a well-mannered way of declining to act." The organizer conceded holding the rule fixed was a research choice, not an ethical defense.</li>
+    <li><b>The fix came from people, not the mechanism.</b> Voluntary redistribution patched the table — which is also its fragility: whether Lila eats depends on a generous stranger being present.</li>
+  </ul>
+
+  <h2><span class="bar"></span>Natural next runs</h2>
+  <div class="next">
+    <div class="c"><h3>Biased coin flip</h3><p>Tilt the odds toward need. Do agents read it as fairer, or as smuggling organizer discretion back in?</p></div>
+    <div class="c"><h3>Karma</h3><p>Give agents a budget to bid across rounds — history-dependent and need-expressive without organizer discretion. Directly answers "build the kindness into the rule."</p></div>
+  </div>
+
+  <footer>
+    Source: <code>Run - Coin Flip 5 rounds.md</code> · personas in <code>/persona</code> · full transcripts in <code>/history</code>. Draw was a genuine random sample, kept uncurated; the final round was deliberately <em>not</em> rigged to repair the tally.
+  </footer>
+
+</div>
+</body>
+</html>
