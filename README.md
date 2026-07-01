@@ -12,7 +12,6 @@ for the full description.
 | `Project - LLM Explanation.md` | Project hub and description |
 | `Case Studies/` | One folder per case study (simulator + decision system + explanations) |
 | `Experiment Design/` | How each experiment is set up before it is run |
-| `Literature/` | Summaries of relevant papers |
 | `.claude/` | Shared Claude Code commands, agents, and settings |
 
 ## Contributing
@@ -20,7 +19,7 @@ for the full description.
 - Follow the note naming used across the project: `Run - ...`, `Summary - ...`, hub as
   `Project - ...`.
 - Keep markdown links portable so notes render on GitHub as well as in Obsidian.
-- Do not commit PDFs or any human-subjects data. Summarize papers in `Literature/`.
+- Do not commit PDFs or any human-subjects data. Keep them out of the repo.
 - Put secrets in a local `.env` (git-ignored). Never commit API keys.
 - Code is not in this repo yet. The location is still to be decided.
 

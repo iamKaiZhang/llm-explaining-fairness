@@ -12,12 +12,11 @@ secrets.json
 *.key
 
 # Claude Code: settings stay local; only commands and agents are shared
-.claude/settings.json
 .claude/settings.local.json
 CLAUDE.local.md
 
-# Reference PDFs (large binaries; summarize in Literature/ instead)
-*.pdf
+# Local, non-pushed working area (deep-dive reviews, drafts, PDFs)
+Local/
 
 # --- Uncomment when code lands in this repo ---
 # __pycache__/

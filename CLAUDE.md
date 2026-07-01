@@ -13,7 +13,6 @@ then layered explanation mechanisms, then evaluation.
 - `Case Studies/<name>/` - one folder per case study. Each has its own `CLAUDE.md`,
   a `persona/` and `history/` folder, and `Run - *.md` / `Summary - *.md` notes.
 - `Experiment Design/` - how each experiment is set up before it is run.
-- `Literature/` - summaries of relevant papers, in your own words.
 
 ## Conventions
 
