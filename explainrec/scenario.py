@@ -74,7 +74,15 @@ class Scenario:
                 raise ValueError(f"constraint name {spec.name!r} already in use")
             new_constraints.append(spec)
         overrides = dict(self.gender_overrides)
-        overrides.update({o.user_id: o.gender for o in mod.gender_overrides})
+        for o in mod.gender_overrides:
+            if not 0 <= o.user_id < self.data.n_users:
+                raise ValueError(
+                    f"gender override: user_id {o.user_id} out of range "
+                    f"(0..{self.data.n_users - 1})"
+                )
+            if o.gender not in ("M", "F"):
+                raise ValueError(f'gender must be "M" or "F", got {o.gender!r}')
+            overrides[o.user_id] = o.gender
         return replace(
             self,
             constraints=new_constraints,

@@ -40,9 +40,13 @@ Two LLM backends (`explainrec/llm/backend.py`):
 `--llm-model` overrides the model (API id like `claude-opus-5`, or a CLI alias
 like `opus`/`sonnet`).
 
-Solving one scenario takes ~40 s (a 943 x 1682 variable LP); an `ask` from the
-CLI solves both the baseline and the modified problem. For interactive work,
-build the pipeline once and reuse it:
+Solving one scenario takes ~40 s (a 943 x 1682 variable LP). Every solved
+scenario — the baseline and each modified problem — is cached in
+`data/cache/` (~13 MB per solution), keyed by the full problem definition,
+so re-asking a question whose modification was solved before is instant and
+only genuinely new problems pay the solve. Changing constraints, slate size,
+or model hyperparameters yields a new key; delete the folder to force
+re-solves. For interactive work, build the pipeline once and reuse it:
 
 ```python
 from explainrec.pipeline import Pipeline
@@ -71,12 +75,25 @@ See [docs/architecture.md](docs/architecture.md) for the formulation, the
 modification schema, and how to add constraint types. Research-level notes
 live in the Obsidian vault (`05_Projects/LLM Explanation/`).
 
+## Demos
+
+- **Notebook**: `demo/notebooks/demo.ipynb` — executed walkthrough: baseline,
+  the two flagship what-if queries via the CLI backend, and how to inject a
+  `Modification` directly without the LLM.
+- **Web demo**: `python demo/server.py` — starts a local page at
+  `http://localhost:8765` where you type what-if questions. The server keeps
+  the pipeline warm (baseline solved once at startup) and bridges the browser
+  to the local Claude CLI; use `--backend api` for the API instead. Stdlib
+  only, no extra dependencies.
+
 ## Repository layout
 
 | Path | Purpose |
 | --- | --- |
 | `explainrec/` | The simulation + LLM pipeline (see architecture doc) |
 | `tests/` | Pytest suite (small synthetic instances, no network/LLM) |
+| `demo/notebooks/demo.ipynb` | Executed demo walkthrough |
+| `demo/server.py` | Local web demo (stdlib HTTP server + single page) |
 | `docs/architecture.md` | Formulation, module map, extension guide |
 | `data/` | MovieLens 100k, downloaded on first run (git-ignored) |
 | `archive/` | Earlier persona-based case-study notes (superseded) |

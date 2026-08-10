@@ -32,6 +32,8 @@ class Solution:
     slate_size: int
     recs: list[np.ndarray]       # per user: item indices sorted by allocation
     exposure: np.ndarray         # per item: expected number of users reached
+    user_mean_rating: np.ndarray  # per user: mean predicted rating of their slate
+    user_cold_items: np.ndarray   # per user: number of cold items in their slate
     n_fractional: int
     solve_seconds: float
 
@@ -72,6 +74,8 @@ def solve_allocation(
         slate_size=slate_size,
         recs=recs,
         exposure=x.sum(axis=0),
+        user_mean_rating=(r_hat * x).sum(axis=1) / slate_size,
+        user_cold_items=x[:, data.cold_items].sum(axis=1),
         n_fractional=n_frac,
         solve_seconds=elapsed,
     )

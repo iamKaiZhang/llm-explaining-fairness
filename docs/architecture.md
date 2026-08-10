@@ -79,7 +79,16 @@ Two design decisions carry the faithfulness argument:
 | `remove_constraints` | names of active constraints to drop (e.g. `cold-item-exposure` for "no exploration") |
 | `gender_overrides` | per-user attribute counterfactuals (re-estimates $\hat r$) |
 | `set_slate_size` | change $k$ |
-| `focal_users` | users the query is about; their slate diff (kept/removed/added titles) is included in the report |
+| `focal_users` | users the query is about; their slate diff (kept/removed/added titles, cold items labeled `[cold]`, per-slate cold counts, predicted slate rating) is included in the report |
+
+The comparison report also carries distributional fairness metrics computed
+per solve: the per-user slate-rating distribution (min/quartiles/max/std; min
+is the worst-off user), the per-user exploration-burden distribution (cold
+items per slate, with Gini), and item-exposure concentration (Gini and the
+top-10% exposure share). Adding a per-user metric means computing it in
+`solve_allocation` (it usually needs $\hat r$, which differs per scenario),
+storing it on `Solution`, summarizing it in `compare.py`, and bumping
+`solution_version` in the pipeline cache key.
 
 ## Adding a constraint type
 

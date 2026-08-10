@@ -13,6 +13,33 @@ from .data import Dataset
 from .problem import Solution
 
 
+def _gini(values: np.ndarray) -> float:
+    """Gini coefficient of a non-negative array (0 = equal, 1 = concentrated)."""
+    total = float(values.sum())
+    if total == 0:
+        return 0.0
+    sorted_vals = np.sort(values)
+    n = len(sorted_vals)
+    cum = np.cumsum(sorted_vals)
+    return float((n + 1 - 2 * cum.sum() / total) / n)
+
+
+def _dist(values: np.ndarray, gini: bool = False) -> dict:
+    """Summary statistics of a per-user (or per-item) array."""
+    q25, q50, q75 = np.percentile(values, [25, 50, 75])
+    out = {
+        "min": round(float(values.min()), 3),
+        "p25": round(float(q25), 3),
+        "median": round(float(q50), 3),
+        "p75": round(float(q75), 3),
+        "max": round(float(values.max()), 3),
+        "std": round(float(values.std()), 3),
+    }
+    if gini:
+        out["gini"] = round(_gini(values), 3)
+    return out
+
+
 def compare_solutions(
     base: Solution,
     mod: Solution,
@@ -44,6 +71,31 @@ def compare_solutions(
             "base_items_shown": int((base.exposure[cold] > 1e-6).sum()),
             "modified_items_shown": int((mod.exposure[cold] > 1e-6).sum()),
             "n_cold_items": len(cold),
+            "mean_cold_items_per_user_slate": {
+                "base": round(float(base.exposure[cold].sum()) / data.n_users, 2),
+                "modified": round(float(mod.exposure[cold].sum()) / data.n_users, 2),
+            },
+        },
+        "per_user_slate_rating_distribution": {
+            "note": "mean predicted rating of each user's slate; min = worst-off user",
+            "base": _dist(base.user_mean_rating),
+            "modified": _dist(mod.user_mean_rating),
+        },
+        "exploration_burden_distribution": {
+            "note": "number of cold items in each user's slate; gini 0 = evenly shared",
+            "base": _dist(base.user_cold_items, gini=True),
+            "modified": _dist(mod.user_cold_items, gini=True),
+        },
+        "item_exposure_concentration": {
+            "note": "how unevenly total exposure is spread over the catalog",
+            "gini": {
+                "base": round(_gini(base.exposure), 3),
+                "modified": round(_gini(mod.exposure), 3),
+            },
+            "top_10pct_items_exposure_share": {
+                "base": _top_share(base.exposure),
+                "modified": _top_share(mod.exposure),
+            },
         },
         "fractional_entries": {"base": base.n_fractional, "modified": mod.n_fractional},
         "slate_size": {"base": base.slate_size, "modified": mod.slate_size},
@@ -55,13 +107,33 @@ def compare_solutions(
     return report
 
 
+def _top_share(exposure: np.ndarray) -> float:
+    """Share of total exposure captured by the 10% most-exposed items."""
+    top_n = max(1, len(exposure) // 10)
+    top = np.sort(exposure)[-top_n:]
+    return round(float(top.sum() / exposure.sum()), 3)
+
+
 def _focal_diff(base: Solution, mod: Solution, data: Dataset, u: int) -> dict:
+    cold = set(data.cold_items.tolist())
     before = set(base.recs[u].tolist())
     after = set(mod.recs[u].tolist())
+
+    def label(i: int) -> str:
+        return data.title(i) + (" [cold]" if i in cold else "")
+
     return {
-        "kept": sorted(data.title(i) for i in before & after),
-        "removed": sorted(data.title(i) for i in before - after),
-        "added": sorted(data.title(i) for i in after - before),
+        "cold_items_in_slate": {
+            "base": len(before & cold),
+            "modified": len(after & cold),
+        },
+        "mean_predicted_slate_rating": {
+            "base": round(float(base.user_mean_rating[u]), 3),
+            "modified": round(float(mod.user_mean_rating[u]), 3),
+        },
+        "kept": sorted(label(i) for i in before & after),
+        "removed": sorted(label(i) for i in before - after),
+        "added": sorted(label(i) for i in after - before),
     }
 
 

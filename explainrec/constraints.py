@@ -38,6 +38,11 @@ class ItemSelector(BaseModel):
         if self.kind == "ids":
             if not self.ids:
                 raise ValueError("kind='ids' requires a non-empty ids list")
+            bad = [i for i in self.ids if not 0 <= i < data.n_items]
+            if bad:
+                raise ValueError(
+                    f"item ids out of range (0..{data.n_items - 1}): {bad}"
+                )
             return np.asarray(self.ids, dtype=int)
         if self.kind == "genre":
             if not self.genre:
@@ -124,8 +129,23 @@ def build_constraint(
     if spec.type == "forbid_items":
         items = spec.items.resolve(data)
         if spec.user_id is not None:
+            _check_user(spec.user_id, data, spec.name)
             return [X[spec.user_id, items] == 0]
         return [X[:, items] == 0]
     if spec.type == "force_assign":
+        _check_user(spec.user_id, data, spec.name)
+        if not 0 <= spec.item_id < data.n_items:
+            raise ValueError(
+                f"constraint {spec.name!r}: item_id {spec.item_id} out of "
+                f"range (0..{data.n_items - 1})"
+            )
         return [X[spec.user_id, spec.item_id] == 1]
     raise ValueError(f"unknown constraint type {spec.type!r}")
+
+
+def _check_user(user_id: int, data: Dataset, name: str) -> None:
+    if not 0 <= user_id < data.n_users:
+        raise ValueError(
+            f"constraint {name!r}: user_id {user_id} out of range "
+            f"(0..{data.n_users - 1})"
+        )
