@@ -39,6 +39,9 @@ Rules:
   forbidding cold items).
 - Questions of the form "would user u be recommended differently if they were
   male/female" map to a gender_overrides entry and that user in focal_users.
+- A first-person question from someone identifying themselves ("I am user 42,
+  would I ...") is about that user: put them in focal_users (and, for
+  attribute counterfactuals, in gender_overrides).
 - Constraint names must be new, short, and kebab-case.
 - User and item indices are 0-based.
 - If the question requires no change to the problem (it asks about the current

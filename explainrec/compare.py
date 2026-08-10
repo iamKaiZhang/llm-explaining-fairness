@@ -122,7 +122,18 @@ def _focal_diff(base: Solution, mod: Solution, data: Dataset, u: int) -> dict:
     def label(i: int) -> str:
         return data.title(i) + (" [cold]" if i in cold else "")
 
+    user = data.users.loc[u]
+    own_ratings = data.ratings[data.ratings["user"] == u]["rating"]
     return {
+        "profile": {
+            "note": ("attributes as recorded in the dataset; counterfactual "
+                     "overrides, if any, are described in the applied change"),
+            "age": int(user["age"]),
+            "gender": str(user["gender"]),
+            "occupation": str(user["occupation"]),
+            "n_ratings": int(len(own_ratings)),
+            "mean_rating_given": round(float(own_ratings.mean()), 2),
+        },
         "cold_items_in_slate": {
             "base": len(before & cold),
             "modified": len(after & cold),

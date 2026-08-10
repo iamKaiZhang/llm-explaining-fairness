@@ -79,7 +79,7 @@ Two design decisions carry the faithfulness argument:
 | `remove_constraints` | names of active constraints to drop (e.g. `cold-item-exposure` for "no exploration") |
 | `gender_overrides` | per-user attribute counterfactuals (re-estimates $\hat r$) |
 | `set_slate_size` | change $k$ |
-| `focal_users` | users the query is about; their slate diff (kept/removed/added titles, cold items labeled `[cold]`, per-slate cold counts, predicted slate rating) is included in the report |
+| `focal_users` | users the query is about; the report includes their profile (recorded age/gender/occupation, rating history) and slate diff (kept/removed/added titles, cold items labeled `[cold]`, per-slate cold counts, predicted slate rating) |
 
 The comparison report also carries distributional fairness metrics computed
 per solve: the per-user slate-rating distribution (min/quartiles/max/std; min

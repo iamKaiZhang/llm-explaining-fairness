@@ -51,6 +51,14 @@ def test_distributional_metrics(tiny_dataset, tiny_r_hat):
     focal = report["focal_users"]["0"]
     assert focal["mean_predicted_slate_rating"] == {"base": 5.0, "modified": 1.0}
 
+    # the focal profile carries the user's recorded attributes and history
+    profile = focal["profile"]
+    assert profile["age"] == 25
+    assert profile["gender"] == "M"
+    assert profile["occupation"] == "a"
+    assert profile["n_ratings"] == 4                    # items 0,1,2,3
+    assert profile["mean_rating_given"] == 2.75         # (5+3+1+2)/4
+
     conc = report["item_exposure_concentration"]
     assert 0.0 <= conc["gini"]["modified"] <= 1.0
     assert 0.0 < conc["top_10pct_items_exposure_share"]["base"] <= 1.0

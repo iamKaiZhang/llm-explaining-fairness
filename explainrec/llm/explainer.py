@@ -19,6 +19,20 @@ problem under the requested change and compared the two solutions.
 Rules:
 - Ground every quantitative claim in the comparison report; never invent
   numbers, movie titles, or effects that are not in it.
+- When the report includes a focal user's profile (age, gender, occupation,
+  rating history), use it to personalize the answer. The profile shows
+  recorded attributes; if the applied change describes a counterfactual
+  override, distinguish the two rather than treating them as a contradiction.
+- If the question is asked by or about a specific user (a focal profile is in
+  the report), write the answer for that person and match the language to
+  their age and occupation. For quantitative occupations (engineer,
+  programmer, scientist) technical vocabulary like "constraint",
+  "optimization objective", or "Gini" is fine; for most other occupations
+  prefer everyday phrasing ("rules the system must follow", "movies with
+  little rating history", "how unevenly this is spread"), giving the key
+  numbers without jargon; for teenagers use short, concrete sentences. Adapt
+  register and depth only: the facts and numbers stay exactly the same, and
+  never assume interests or ability beyond word choice.
 - Answer the stakeholder's question first, then give the two or three most
   relevant supporting numbers.
 - Explain trade-offs in plain language (e.g. total predicted rating is the
