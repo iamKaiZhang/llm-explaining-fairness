@@ -23,9 +23,22 @@ cp .env.example .env         # add your ANTHROPIC_API_KEY (only needed for `ask`
 # full LLM loop: interpret -> re-solve -> compare -> explain
 .venv/bin/python -m explainrec ask "What happens if we stop promoting cold items?"
 
+# same, but through the local Claude Code CLI (subscription; no API key needed)
+.venv/bin/python -m explainrec ask --backend cli "What happens if we stop promoting cold items?"
+
 # skip the explanation call and print the raw comparison report
 .venv/bin/python -m explainrec ask --no-explain "Would user 12 get the same movies if they were female?"
 ```
+
+Two LLM backends (`explainrec/llm/backend.py`):
+
+| Backend | Auth | Schema enforcement |
+| --- | --- | --- |
+| `api` (default) | `ANTHROPIC_API_KEY` in `.env` | server-side structured outputs (`messages.parse`) |
+| `cli` | local `claude` login (subscription) | prompt + Pydantic validation, one retry |
+
+`--llm-model` overrides the model (API id like `claude-opus-5`, or a CLI alias
+like `opus`/`sonnet`).
 
 Solving one scenario takes ~40 s (a 943 x 1682 variable LP); an `ask` from the
 CLI solves both the baseline and the modified problem. For interactive work,

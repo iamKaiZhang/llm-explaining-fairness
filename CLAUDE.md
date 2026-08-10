@@ -9,8 +9,11 @@ optimization or the modification schema.
 
 - Python venv at `.venv/` (Python 3.14). Run everything through `.venv/bin/python`.
 - Tests: `.venv/bin/python -m pytest tests/ -q` — fast, no network, no LLM.
-- `ANTHROPIC_API_KEY` lives in `.env` (git-ignored); only `ask` / the `llm/`
-  modules need it. LLM model is `claude-opus-5` (`explainrec/llm/__init__.py`).
+- Two LLM backends (`explainrec/llm/backend.py`): `api` (Anthropic SDK,
+  `ANTHROPIC_API_KEY` in git-ignored `.env`, model `claude-opus-5`) and `cli`
+  (local `claude -p`, subscription auth, no key). The CLI backend strips
+  `ANTHROPIC_*`/`CLAUDE*` vars from the subprocess env on purpose — keep that,
+  it prevents API-key precedence and nested-session conflicts.
 
 ## Conventions
 

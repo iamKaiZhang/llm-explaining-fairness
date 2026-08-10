@@ -8,10 +8,8 @@ the solver or the data beyond the report.
 
 from __future__ import annotations
 
-import anthropic
-
 from ..scenario import Modification
-from . import MODEL
+from .backend import ApiBackend, Backend
 
 SYSTEM_PROMPT = """\
 You explain the outcome of a what-if analysis on a movie recommender system to
@@ -35,20 +33,12 @@ def explain(
     query: str,
     modification: Modification,
     report: str,
-    client: anthropic.Anthropic | None = None,
+    backend: Backend | None = None,
 ) -> str:
-    client = client or anthropic.Anthropic()
+    backend = backend or ApiBackend()
     user_content = (
         f"Stakeholder question:\n{query}\n\n"
         f"Change applied to the optimization problem:\n{modification.summary}\n\n"
         f"Comparison report (baseline vs modified solution):\n{report}"
     )
-    response = client.messages.create(
-        model=MODEL,
-        max_tokens=4096,
-        system=SYSTEM_PROMPT,
-        messages=[{"role": "user", "content": user_content}],
-    )
-    if response.stop_reason == "refusal":
-        raise RuntimeError("the model declined to explain this result")
-    return "".join(b.text for b in response.content if b.type == "text")
+    return backend.text(SYSTEM_PROMPT, user_content)

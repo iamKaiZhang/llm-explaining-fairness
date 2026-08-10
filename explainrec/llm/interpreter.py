@@ -1,17 +1,16 @@
 """Natural-language query -> structured ``Modification``.
 
-Uses structured outputs (``client.messages.parse`` with the Pydantic
-``Modification`` schema), so the LLM cannot emit an edit the optimizer
-does not understand; every accepted modification is re-validated by the
+The backend enforces the Pydantic ``Modification`` schema (server-side
+structured outputs on the API backend, prompt + validation on the CLI
+backend), so the LLM cannot emit an edit the optimizer does not
+understand; every accepted modification is re-validated by the
 constraint builders before solving.
 """
 
 from __future__ import annotations
 
-import anthropic
-
 from ..scenario import Modification, Scenario
-from . import MODEL
+from .backend import ApiBackend, Backend
 
 SYSTEM_PROMPT = """\
 You translate stakeholder questions about a movie recommender system into a
@@ -50,23 +49,12 @@ Rules:
 def interpret(
     query: str,
     scenario: Scenario,
-    client: anthropic.Anthropic | None = None,
+    backend: Backend | None = None,
 ) -> Modification:
-    client = client or anthropic.Anthropic()
+    backend = backend or ApiBackend()
     system = SYSTEM_PROMPT.format(
         dataset_summary=scenario.data.summary(),
         slate_size=scenario.slate_size,
         constraints=scenario.describe_constraints(),
     )
-    response = client.messages.parse(
-        model=MODEL,
-        max_tokens=4096,
-        system=system,
-        messages=[{"role": "user", "content": query}],
-        output_format=Modification,
-    )
-    if response.stop_reason == "refusal":
-        raise RuntimeError("the model declined to interpret this query")
-    if response.parsed_output is None:
-        raise RuntimeError("could not parse a Modification from the model output")
-    return response.parsed_output
+    return backend.structured(system, query, Modification)

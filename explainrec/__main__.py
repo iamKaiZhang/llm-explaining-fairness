@@ -26,6 +26,11 @@ def main() -> None:
     p_ask.add_argument("--slate-size", type=int, default=10)
     p_ask.add_argument("--no-explain", action="store_true",
                        help="skip the explanation call; print the raw report")
+    p_ask.add_argument("--backend", choices=["api", "cli"], default="api",
+                       help="'api' = Anthropic API (needs ANTHROPIC_API_KEY); "
+                            "'cli' = local Claude Code CLI (subscription)")
+    p_ask.add_argument("--llm-model", default=None,
+                       help="override the model (API id, or CLI alias like 'opus')")
 
     args = parser.parse_args()
     pipeline = Pipeline.build(slate_size=args.slate_size)
@@ -44,7 +49,11 @@ def main() -> None:
         print(pipeline.baseline.describe_constraints())
         return
 
-    result = pipeline.ask(args.query, skip_explanation=args.no_explain)
+    from .llm.backend import get_backend
+
+    backend_kwargs = {"model": args.llm_model} if args.llm_model else {}
+    backend = get_backend(args.backend, **backend_kwargs)
+    result = pipeline.ask(args.query, backend=backend, skip_explanation=args.no_explain)
     print(f"modification: {result.modification.summary}")
     print(json.dumps(result.modification.model_dump(exclude_defaults=True), indent=2))
     if result.report:

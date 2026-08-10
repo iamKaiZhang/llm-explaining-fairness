@@ -11,11 +11,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-import anthropic
-
 from .compare import compare_solutions, report_text
 from .constraints import ConstraintSpec, ItemSelector
 from .data import DEFAULT_DATA_DIR, Dataset, load_dataset
+from .llm.backend import ApiBackend, Backend
 from .llm.explainer import explain
 from .llm.interpreter import interpret
 from .problem import Solution
@@ -81,15 +80,15 @@ class Pipeline:
         )
 
     def ask(
-        self, query: str, client: anthropic.Anthropic | None = None,
+        self, query: str, backend: Backend | None = None,
         skip_explanation: bool = False,
     ) -> AskResult:
-        client = client or anthropic.Anthropic()
-        mod = interpret(query, self.baseline, client)
+        backend = backend or ApiBackend()
+        mod = interpret(query, self.baseline, backend)
         if mod.is_noop() and not mod.focal_users:
             return AskResult(query, mod, {}, mod.summary)
         report = self.run_modification(mod)
         explanation = None
         if not skip_explanation:
-            explanation = explain(query, mod, report_text(report), client)
+            explanation = explain(query, mod, report_text(report), backend)
         return AskResult(query, mod, report, explanation)
