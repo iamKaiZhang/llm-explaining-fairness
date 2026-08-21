@@ -48,11 +48,28 @@ def explain(
     modification: Modification,
     report: str,
     backend: Backend | None = None,
+    include_change_summary: bool = True,
 ) -> str:
+    """Explain the comparison report to the stakeholder.
+
+    ``include_change_summary=False`` withholds the applied change from the
+    prompt, so the explainer must infer the cause from the report alone.
+    This is an evaluation ablation (does the mechanism-grounding score
+    survive when the cause is not handed to the model?), not a production
+    mode -- the demos and ``Pipeline.ask`` always include the summary.
+    """
     backend = backend or ApiBackend()
+    change_block = (
+        f"Change applied to the optimization problem:\n{modification.summary}\n\n"
+        if include_change_summary
+        else (
+            "Change applied to the optimization problem: (withheld for this "
+            "run; infer what changed only from the comparison report)\n\n"
+        )
+    )
     user_content = (
         f"Stakeholder question:\n{query}\n\n"
-        f"Change applied to the optimization problem:\n{modification.summary}\n\n"
+        f"{change_block}"
         f"Comparison report (baseline vs modified solution):\n{report}"
     )
     return backend.text(SYSTEM_PROMPT, user_content)

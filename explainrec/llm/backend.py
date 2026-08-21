@@ -1,6 +1,6 @@
-"""LLM backends: Anthropic API or the local Claude Code CLI.
+"""LLM backends: Anthropic API, the local Claude Code CLI, or Gemini.
 
-Both backends expose the same two calls:
+All backends expose the same two calls:
 
 - ``text(system, user) -> str``
 - ``structured(system, user, schema) -> schema instance``
@@ -10,7 +10,12 @@ structured outputs enforce the schema server-side). ``CliBackend``
 shells out to a local ``claude -p`` (Claude Code CLI, billed to the
 subscription, no API key needed); the schema is enforced client-side by
 prompting for JSON and validating with Pydantic, with one retry that
-feeds the validation error back.
+feeds the validation error back. ``GeminiBackend`` uses the Gemini API
+(needs ``GEMINI_API_KEY``; structured outputs enforce the schema
+server-side, like ``ApiBackend``) -- swapping it in for the explainer
+lets the same comparison report be explained by two different models
+so their outputs can be scored against the same faithfulness /
+mechanism-grounding checks.
 """
 
 from __future__ import annotations
@@ -134,6 +139,42 @@ class CliBackend:
             return schema.model_validate_json(extract_json(raw))
 
 
+class GeminiBackend:
+    """Google Gemini API (``google-genai`` SDK; needs ``GEMINI_API_KEY``)."""
+
+    def __init__(self, client=None, model: str = "gemini-3.6-flash") -> None:
+        from google import genai
+
+        self.client = client or genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+        self.model = model
+
+    def text(self, system: str, user: str) -> str:
+        from google.genai import types
+
+        response = self.client.models.generate_content(
+            model=self.model, contents=user,
+            config=types.GenerateContentConfig(system_instruction=system),
+        )
+        if not response.text:
+            raise RuntimeError("the model returned no text (it may have been blocked)")
+        return response.text
+
+    def structured(self, system: str, user: str, schema: type[M]) -> M:
+        from google.genai import types
+
+        response = self.client.models.generate_content(
+            model=self.model, contents=user,
+            config=types.GenerateContentConfig(
+                system_instruction=system,
+                response_mime_type="application/json",
+                response_schema=schema,
+            ),
+        )
+        if response.parsed is None:
+            raise RuntimeError(f"could not parse a {schema.__name__} from the model output")
+        return response.parsed
+
+
 def extract_json(text: str) -> str:
     """Pull the outermost JSON object out of a possibly fenced/prosy reply."""
     start, end = text.find("{"), text.rfind("}")
@@ -147,4 +188,6 @@ def get_backend(name: str, **kwargs) -> Backend:
         return ApiBackend(**kwargs)
     if name == "cli":
         return CliBackend(**kwargs)
-    raise ValueError(f"unknown backend {name!r}; expected 'api' or 'cli'")
+    if name == "gemini":
+        return GeminiBackend(**kwargs)
+    raise ValueError(f"unknown backend {name!r}; expected 'api', 'cli', or 'gemini'")

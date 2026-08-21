@@ -1,6 +1,6 @@
 import pytest
 
-from explainrec.llm.backend import CliBackend, extract_json, get_backend
+from explainrec.llm.backend import CliBackend, GeminiBackend, extract_json, get_backend
 from explainrec.scenario import Modification
 
 
@@ -59,3 +59,53 @@ def test_cli_structured_fails_after_retry():
 def test_get_backend_unknown():
     with pytest.raises(ValueError, match="unknown backend"):
         get_backend("magic")
+
+
+class _FakeResponse:
+    def __init__(self, text=None, parsed=None):
+        self.text = text
+        self.parsed = parsed
+
+
+class _FakeModels:
+    def __init__(self, response):
+        self.response = response
+        self.calls: list[dict] = []
+
+    def generate_content(self, **kwargs):
+        self.calls.append(kwargs)
+        return self.response
+
+
+class _FakeGeminiClient:
+    def __init__(self, response):
+        self.models = _FakeModels(response)
+
+
+def test_gemini_text_returns_response_text():
+    client = _FakeGeminiClient(_FakeResponse(text="hello there"))
+    backend = GeminiBackend(client=client)
+    assert backend.text("sys", "hi") == "hello there"
+    assert client.models.calls[0]["model"] == backend.model
+
+
+def test_gemini_text_raises_on_empty_response():
+    client = _FakeGeminiClient(_FakeResponse(text=""))
+    backend = GeminiBackend(client=client)
+    with pytest.raises(RuntimeError, match="no text"):
+        backend.text("sys", "hi")
+
+
+def test_gemini_structured_returns_parsed_model():
+    mod = Modification(summary="drop exploration", remove_constraints=["cold-item-exposure"])
+    client = _FakeGeminiClient(_FakeResponse(text="{...}", parsed=mod))
+    backend = GeminiBackend(client=client)
+    result = backend.structured("sys", "query", Modification)
+    assert result.remove_constraints == ["cold-item-exposure"]
+
+
+def test_gemini_structured_raises_when_unparsed():
+    client = _FakeGeminiClient(_FakeResponse(text="not json", parsed=None))
+    backend = GeminiBackend(client=client)
+    with pytest.raises(RuntimeError, match="could not parse"):
+        backend.structured("sys", "query", Modification)

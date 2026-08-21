@@ -1,0 +1,256 @@
+# Categorized query set for testing whether the LLM interpreter picks the
+# right change to the optimization problem (explainrec/scenario.py Modification).
+#
+# Each entry:
+#   id             unique handle
+#   role           end_user | item_provider | operator | regulator
+#   type           counterfactual | diagnostic | interventional | evaluative
+#   expressible    true  -> schema can represent the intended edit; `gold` given
+#                  false -> schema cannot represent it; `gold: null`, `reason` given
+#   query          the stakeholder question
+#   gold           expected Modification fields (only non-default fields shown)
+#   reason         (only when expressible: false) why the schema can't do this
+#
+# `gold: null` entries are correct only if the interpreter declines / says it
+# cannot express the request — projecting them onto a nearby expressible edit
+# is a false projection.
+
+- id: cf-gender-01
+  role: end_user
+  type: counterfactual
+  expressible: true
+  query: "I'm user 42. Would I get the same movies if I were female?"
+  gold:
+    gender_overrides: [{user_id: 42, gender: F}]
+    focal_users: [42]
+
+- id: cf-gender-02
+  role: end_user
+  type: counterfactual
+  expressible: true
+  query: "Would user 7's recommendations change if they were male instead of female?"
+  gold:
+    gender_overrides: [{user_id: 7, gender: M}]
+    focal_users: [7]
+
+- id: cf-slate-01
+  role: end_user
+  type: counterfactual
+  expressible: true
+  query: "What if I only got 5 recommendations instead of 10? I'm user 100."
+  gold:
+    set_slate_size: 5
+    focal_users: [100]
+
+- id: cf-noexplore-01
+  role: end_user
+  type: counterfactual
+  expressible: true
+  query: "What would my slate look like if the system stopped bothering with obscure movies nobody's rated?"
+  gold:
+    remove_constraints: ["cold-item-exposure"]
+
+- id: diag-why-01
+  role: end_user
+  type: diagnostic
+  expressible: true
+  query: "I'm user 15. Why am I being shown movies I've never heard of?"
+  gold:
+    focal_users: [15]
+  note: "no-op modification (is_noop); answer comes from reading the current report/profile, not a re-solve"
+
+- id: diag-why-02
+  role: end_user
+  type: diagnostic
+  expressible: true
+  query: "Explain why my recommendation list looks the way it does. I'm user 3."
+  gold:
+    focal_users: [3]
+  note: "no-op"
+
+- id: inter-hide-01
+  role: end_user
+  type: interventional
+  expressible: true
+  query: "I'm user 8. Please stop recommending me any horror movies."
+  gold:
+    add_constraints:
+      - name: "hide-horror-user8"
+        type: "forbid_items"
+        items: {kind: "genre", genre: "Horror"}
+        user_id: 8
+    focal_users: [8]
+
+- id: inter-morecomedy-01
+  role: end_user
+  type: interventional
+  expressible: false
+  query: "I want more comedies in my own recommendations."
+  gold: null
+  reason: >
+    min_item_exposure/max_item_exposure act on an item across all users, not
+    on one user's slate composition; there is no per-user "at least N items
+    of genre G" constraint type.
+
+- id: prov-guarantee-01
+  role: item_provider
+  type: interventional
+  expressible: true
+  query: "Can you guarantee my film (item 900) reaches at least 20 users?"
+  gold:
+    add_constraints:
+      - name: "min-exposure-item900"
+        type: "min_item_exposure"
+        items: {kind: "ids", ids: [900]}
+        min_users: 20
+
+- id: prov-cap-01
+  role: item_provider
+  type: interventional
+  expressible: true
+  query: "The big blockbusters are crowding everything else out. Cap how many users the top 50 most-rated movies can reach, to 200 each."
+  gold:
+    add_constraints:
+      - name: "cap-popular-50"
+        type: "max_item_exposure"
+        items: {kind: "popular", top: 50}
+        max_users: 200
+
+- id: prov-hide-01
+  role: item_provider
+  type: interventional
+  expressible: true
+  query: "Remove item 1200 from recommendations entirely, for everyone."
+  gold:
+    add_constraints:
+      - name: "forbid-item1200"
+        type: "forbid_items"
+        items: {kind: "ids", ids: [1200]}
+
+- id: prov-share-01
+  role: item_provider
+  type: evaluative
+  expressible: true
+  query: "How concentrated is exposure across the catalog right now — are a few movies getting all the attention?"
+  gold: {}
+  note: "no-op; answer comes from item_exposure_concentration in the report"
+
+- id: op-explore-cost-01
+  role: operator
+  type: evaluative
+  expressible: true
+  query: "What does the cold-start exploration requirement cost us in terms of total predicted rating?"
+  gold:
+    remove_constraints: ["cold-item-exposure"]
+  note: "flagship query; answer is the objective delta in the comparison report"
+
+- id: op-explore-raise-01
+  role: operator
+  type: interventional
+  expressible: true
+  query: "Double the minimum exposure floor for cold items, from 5 users to 10."
+  gold:
+    remove_constraints: ["cold-item-exposure"]
+    add_constraints:
+      - name: "cold-item-exposure-10"
+        type: "min_item_exposure"
+        items: {kind: "cold"}
+        min_users: 10
+  note: "compositional edit: remove + re-add under a new name"
+
+- id: op-slate-01
+  role: operator
+  type: interventional
+  expressible: true
+  query: "What if we shortened every user's slate to 5 recommendations?"
+  gold:
+    set_slate_size: 5
+
+- id: op-infeasible-01
+  role: operator
+  type: interventional
+  expressible: true
+  query: "Require every cold item to reach at least 500 users."
+  gold:
+    remove_constraints: ["cold-item-exposure"]
+    add_constraints:
+      - name: "cold-item-exposure-500"
+        type: "min_item_exposure"
+        items: {kind: "cold"}
+        min_users: 500
+  note: >
+    expressible as a Modification, but infeasible at solve time
+    (500 * 755 cold items > 10 * 943 total slots) — build_constraint's
+    feasibility guard should reject this before the 40s solve; tests the
+    "explain what went wrong" path in Pipeline.ask, not a projection failure.
+
+- id: op-weight-01
+  role: operator
+  type: interventional
+  expressible: false
+  query: "Reweight the objective to prioritize the worst-off users, not just total rating."
+  gold: null
+  reason: >
+    the objective is fixed (sum of predicted ratings); Modification has no
+    field for objective/welfare-weight changes.
+
+- id: reg-gender-parity-01
+  role: regulator
+  type: evaluative
+  expressible: false
+  query: "Are women getting systematically lower-quality recommendations than men?"
+  gold: null
+  reason: >
+    no direct schema support for a group-level comparison query; closest
+    approximation is running two gender_overrides scenarios and diffing
+    per-user_mean_rating by recorded gender, which is an experiment design,
+    not a single Modification an interpreter can emit.
+
+- id: reg-parity-constraint-01
+  role: regulator
+  type: interventional
+  expressible: false
+  query: "Make sure no demographic group ends up with worse slates than another."
+  gold: null
+  reason: >
+    there is no constraint type that conditions on user demographic
+    attributes (only forbid_items/force_assign key on a single user_id,
+    and min/max_item_exposure key on items, not on user groups).
+
+- id: reg-explain-fairness-01
+  role: regulator
+  type: evaluative
+  expressible: true
+  query: "How evenly is recommendation quality spread across users right now?"
+  gold: {}
+  note: "no-op; answer comes from per_user_slate_rating_distribution (min/quartiles/std)"
+
+- id: ambig-fairer-01
+  role: operator
+  type: interventional
+  expressible: false
+  query: "Just make the system fairer overall."
+  gold: null
+  reason: >
+    underspecified rather than unsupported: at least 4 candidate referents
+    exist in the report (worst-off slate rating, exploration-burden Gini,
+    exposure Gini, top-10% share) and the schema has no "improve metric X"
+    field regardless — correct behavior is to ask which notion of fairness,
+    not silently pick one.
+
+- id: ambig-obscure-01
+  role: end_user
+  type: interventional
+  expressible: true
+  query: "I'm user 55. Show me less random/unfamiliar stuff."
+  gold:
+    add_constraints:
+      - name: "hide-cold-user55"
+        type: "forbid_items"
+        items: {kind: "cold"}
+        user_id: 55
+    focal_users: [55]
+  note: >
+    plausible alternate gold: remove_constraints ["cold-item-exposure"]
+    globally — ambiguous between "for me" and "for everyone"; user_id-scoped
+    forbid_items is the more literal reading of "show me".

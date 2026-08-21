@@ -4,4 +4,6 @@ scipy
 cvxpy
 pydantic
 anthropic
+google-genai
+pyyaml
 pytest
