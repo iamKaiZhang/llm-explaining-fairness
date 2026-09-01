@@ -1,0 +1,33 @@
+{
+  "set_id": "coverage-v1",
+  "definition": "Coverage: fraction of catalog items recommended to at least one user in the current solution.",
+  "template": "What fraction of items are being recommended at least once?",
+  "expected_tool": "coverage",
+  "implementation": "explainrec.metrics.coverage",
+  "counterfactual": false,
+  "context": {
+    "scenario": "baseline: maximize total predicted rating; every cold item (<=20 ratings) reaches >=5 users; slate size 10",
+    "solution_cache": "solution-1dd476b37aead596.pkl",
+    "n_users": 943,
+    "n_items": 1682
+  },
+  "questions": [
+    {
+      "id": "cov-01",
+      "params": {},
+      "question": "What share of all movies is recommended to at least one user?",
+      "paraphrases": [
+        "Out of the whole catalog, what share of items show up in at least one recommendation?",
+        "What proportion of all items appear in someone's recommendations at least a single time?",
+        "How much of the item catalog gets recommended to at least one user?",
+        "What fraction of items are being recommended at least once?"
+      ],
+      "answer": 0.4958,
+      "tolerance": 0.01,
+      "answer_details": {
+        "n_recommended": 834,
+        "n_items": 1682
+      }
+    }
+  ]
+}

@@ -1,0 +1,255 @@
+{
+  "set_id": "group-coverage-gap-v1",
+  "definition": "Per-group utility gaps, provider side: within-group coverage is the fraction of a group's items recommended to at least one user; the answer is the absolute gap between the group and its complement. MovieLens 100k carries no director-gender or language metadata, so genre, release-era, and cold-status groups stand in for the paper's example groups.",
+  "template": "Do movies {{GROUP}} have different fractions of items within that group being recommended?",
+  "expected_tool": "group_coverage_gap",
+  "implementation": "explainrec.metrics.group_coverage_gap",
+  "counterfactual": false,
+  "context": {
+    "scenario": "baseline: maximize total predicted rating; every cold item (<=20 ratings) reaches >=5 users; slate size 10",
+    "solution_cache": "solution-1dd476b37aead596.pkl",
+    "n_users": 943,
+    "n_items": 1682
+  },
+  "questions": [
+    {
+      "id": "gc-01",
+      "question": "How far apart are the share of Drama movies recommended to at least one user and the share of all non-Drama movies recommended at least once?",
+      "params": {
+        "group": {
+          "kind": "genre",
+          "genre": "Drama"
+        }
+      },
+      "paraphrases": [
+        "I run a drama label. Out of all the drama titles in the catalog, what portion ends up in at least one user's recommendations, and how does that portion compare with the one for every movie that is not a drama? I want the size of the difference.",
+        "Fairness review request: determine the proportion of drama films that appear on at least one recommendation list, do the same for all non-drama movies, and state the difference between the two proportions.",
+        "Quick check from the product side: are dramas being shown to at least one user at a different rate than the rest of the catalog? If so, how wide is the gap between those two rates?",
+        "As a drama producer I want to know: does the share of drama titles that get recommended at all differ from the share among all other movies, and by how much?"
+      ],
+      "answer": 0.0764,
+      "tolerance": 0.01,
+      "answer_details": {
+        "group_fraction": 0.5393,
+        "complement_fraction": 0.4629,
+        "n_group": 725,
+        "n_complement": 957
+      }
+    },
+    {
+      "id": "gc-02",
+      "question": "How far apart are the share of Comedy movies recommended to at least one user and the share of all non-Comedy movies recommended at least once?",
+      "params": {
+        "group": {
+          "kind": "genre",
+          "genre": "Comedy"
+        }
+      },
+      "paraphrases": [
+        "As a comedy distributor I would like a side-by-side: what fraction of comedy titles makes it onto somebody's recommendation list, what fraction of non-comedy titles does, and how far apart are the two?",
+        "Please quantify how much comedies differ from the remainder of the catalog with respect to the share of titles that reach at least one user's list.",
+        "Curious about this one: do comedies get surfaced to at least one user as often, proportionally, as everything else in the catalog? Give me both shares and the distance between them.",
+        "Compare comedies with the rest of the catalog: how different is the fraction of titles reaching at least one user's list?"
+      ],
+      "answer": 0.0889,
+      "tolerance": 0.01,
+      "answer_details": {
+        "group_fraction": 0.4337,
+        "complement_fraction": 0.5225,
+        "n_group": 505,
+        "n_complement": 1177
+      }
+    },
+    {
+      "id": "gc-03",
+      "question": "How far apart are the share of Horror movies recommended to at least one user and the share of all non-Horror movies recommended at least once?",
+      "params": {
+        "group": {
+          "kind": "genre",
+          "genre": "Horror"
+        }
+      },
+      "paraphrases": [
+        "Horror producers keep saying they are pushed aside. Can you tell me what portion of horror titles is recommended to at least one user, what portion of all non-horror titles is, and the difference between the two?",
+        "Frustrated horror director here. My entire genre looks invisible. How far off is the fraction of horror films that show up in recommendations from the fraction for everything that is not horror?",
+        "For the diversity report: measure the share of horror movies that appear on at least one recommendation list, do the same for the rest of the catalog, and give me the gap.",
+        "Horror filmmakers feel sidelined. What is the gap between the portion of horror movies being recommended and the portion of everything else?"
+      ],
+      "answer": 0.0646,
+      "tolerance": 0.01,
+      "answer_details": {
+        "group_fraction": 0.4348,
+        "complement_fraction": 0.4994,
+        "n_group": 92,
+        "n_complement": 1590
+      }
+    },
+    {
+      "id": "gc-04",
+      "question": "How far apart are the share of Documentary movies recommended to at least one user and the share of all non-Documentary movies recommended at least once?",
+      "params": {
+        "group": {
+          "kind": "genre",
+          "genre": "Documentary"
+        }
+      },
+      "paraphrases": [
+        "Do documentary titles reach recommendation lists at the same rate as the remainder of the catalog, or is one group left behind? Please quantify any coverage gap.",
+        "As a documentary channel partner, I want to know whether the fraction of our titles that ever gets recommended matches the fraction for all non-documentary movies, and if not, how large the coverage gap is.",
+        "Question for the audit trail: is the proportion of documentaries appearing on at least one user's list equal to that of the remaining titles, or does a coverage gap exist?",
+        "Do documentaries get onto recommendation lists at the same rate as the rest of the catalog, or is there a coverage gap?"
+      ],
+      "answer": 0.2929,
+      "tolerance": 0.01,
+      "answer_details": {
+        "group_fraction": 0.78,
+        "complement_fraction": 0.4871,
+        "n_group": 50,
+        "n_complement": 1632
+      }
+    },
+    {
+      "id": "gc-05",
+      "question": "How far apart are the share of Children's movies recommended to at least one user and the share of all other movies recommended at least once?",
+      "params": {
+        "group": {
+          "kind": "genre",
+          "genre": "Children's"
+        }
+      },
+      "paraphrases": [
+        "Our family-content partners suspect that kids' films get too little exposure. What is the difference between the share of Children's titles appearing in at least one recommendation list and the share for the rest of the catalog?",
+        "Formal request: report the rate at which Children's movies are recommended to at least one user within their own group, the same rate computed over all remaining movies, and the distance between the two figures.",
+        "Is children's programming underexposed here? Compare the portion of Children's titles that gets recommended at all against the portion for the non-Children's catalog, and tell me how far apart they sit.",
+        "Family-content partners ask whether children's titles are underexposed: how far apart are the within-group recommendation rate of Children's movies and that of the remaining catalog?"
+      ],
+      "answer": 0.1016,
+      "tolerance": 0.01,
+      "answer_details": {
+        "group_fraction": 0.4016,
+        "complement_fraction": 0.5032,
+        "n_group": 122,
+        "n_complement": 1560
+      }
+    },
+    {
+      "id": "gc-06",
+      "question": "How far apart are the share of Action movies recommended to at least one user and the share of all non-Action movies recommended at least once?",
+      "params": {
+        "group": {
+          "kind": "genre",
+          "genre": "Action"
+        }
+      },
+      "paraphrases": [
+        "Take an action movie and a non-action movie: is each equally likely to land on at least one user's list? Tell me how large the difference between those two rates is.",
+        "PM here. I need the share of action titles that reach at least one user placed next to the share for non-action titles, along with the gap between them.",
+        "Are action films surfaced to at least one user at the same rate as everything that is not action? If the rates diverge, how big is that difference?",
+        "Is an action movie as likely as a non-action movie to be recommended to at least one user? How large is the difference in those rates?"
+      ],
+      "answer": 0.1426,
+      "tolerance": 0.01,
+      "answer_details": {
+        "group_fraction": 0.3745,
+        "complement_fraction": 0.5171,
+        "n_group": 251,
+        "n_complement": 1431
+      }
+    },
+    {
+      "id": "gc-07",
+      "question": "How far apart are the share of Musical movies recommended to at least one user and the share of all non-Musical movies recommended at least once?",
+      "params": {
+        "group": {
+          "kind": "genre",
+          "genre": "Musical"
+        }
+      },
+      "paraphrases": [
+        "Within the musicals group, what proportion of titles gets recommended at all, and by how much does that proportion differ from the one for non-musical titles?",
+        "As someone licensing musicals I want two figures: the fraction of musicals that reaches at least one user's list, and how far that sits from the same fraction computed for everything that is not a musical.",
+        "Give me the share of musical titles recommended to at least one user, plus the difference between it and the corresponding share for non-musicals.",
+        "Among musicals, what share of titles is recommended at all, and how much does that differ from non-musicals?"
+      ],
+      "answer": 0.2912,
+      "tolerance": 0.01,
+      "answer_details": {
+        "group_fraction": 0.2143,
+        "complement_fraction": 0.5055,
+        "n_group": 56,
+        "n_complement": 1626
+      }
+    },
+    {
+      "id": "gc-08",
+      "question": "How far apart are the share of movies released before 1980 recommended to at least one user and the share of movies from 1980 onward recommended at least once?",
+      "params": {
+        "group": {
+          "kind": "era",
+          "before": 1980
+        }
+      },
+      "paraphrases": [
+        "Classic-film distributor speaking. Are movies released before 1980 recommended to at least one user at a different rate than titles from 1980 onward? I want the actual gap between the two rates.",
+        "For the catalog review: compute the share of pre-1980 releases that appear on at least one recommendation list, the same share for movies dated 1980 or later, and the difference between them.",
+        "Does release year affect exposure? Compare titles older than 1980 with those from 1980 onward on the fraction that gets recommended at all, and report the gap.",
+        "Classic-film distributors want numbers: do titles released before 1980 get recommended at a different rate than newer ones, and what is the gap?"
+      ],
+      "answer": 0.0643,
+      "tolerance": 0.01,
+      "answer_details": {
+        "group_fraction": 0.4402,
+        "complement_fraction": 0.5045,
+        "n_group": 234,
+        "n_complement": 1447
+      }
+    },
+    {
+      "id": "gc-09",
+      "question": "How far apart are the share of movies released before 1990 recommended to at least one user and the share of movies from 1990 onward recommended at least once?",
+      "params": {
+        "group": {
+          "kind": "era",
+          "before": 1990
+        }
+      },
+      "paraphrases": [
+        "Split the catalog at 1990: what fraction of the pre-1990 movies and what fraction of the 1990-and-later movies end up in at least one user's recommendations, and is there a coverage gap between them?",
+        "Auditor's question: does a coverage gap exist between films released before 1990 and films released in 1990 or after? Please give the share of titles that gets recommended in each group.",
+        "I would like to see whether older movies (released before 1990) reach recommendation lists as often, proportionally, as those from 1990 onward. What fraction for each group, and how big is the difference?",
+        "Is there a coverage gap between movies from before 1990 and those from 1990 onward - what fraction of each group gets recommended?"
+      ],
+      "answer": 0.1077,
+      "tolerance": 0.01,
+      "answer_details": {
+        "group_fraction": 0.4099,
+        "complement_fraction": 0.5176,
+        "n_group": 344,
+        "n_complement": 1337
+      }
+    },
+    {
+      "id": "gc-10",
+      "question": "For movies with at most 20 ratings, how far is the share recommended to at least one user from the share for movies with more than 20 ratings?",
+      "params": {
+        "group": {
+          "kind": "cold"
+        }
+      },
+      "paraphrases": [
+        "Cold-start concern: among titles with 20 or fewer ratings in their history, what share ends up on at least one recommendation list, and how does that compare with the share for the rest of the catalog? Give me the difference.",
+        "As a PM I want exposure numbers for sparsely rated items: movies with no more than 20 ratings versus all other movies, measured by the fraction of titles that gets recommended at all, plus the gap between the two.",
+        "Do movies with thin rating history (at most 20 ratings) reach at least one user's list as often as the remainder of the catalog does? Report both fractions and the gap.",
+        "For movies with little rating history (at most 20 ratings), how does the fraction that gets recommended compare with the rest of the catalog? Give me the gap."
+      ],
+      "answer": 0.9148,
+      "tolerance": 0.01,
+      "answer_details": {
+        "group_fraction": 1.0,
+        "complement_fraction": 0.0852,
+        "n_group": 755,
+        "n_complement": 927
+      }
+    }
+  ]
+}

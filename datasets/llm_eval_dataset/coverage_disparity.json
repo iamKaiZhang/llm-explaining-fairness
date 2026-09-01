@@ -1,0 +1,226 @@
+{
+  "set_id": "coverage-disparity-v1",
+  "definition": "Violation of coverage disparity, on the individual-fairness reading: any two alpha-similar recommended items should receive similar coverage. Measured as the fraction of alpha-similar recommended item pairs whose relative exposure gap |e_i - e_j| / max(e_i, e_j) is at most epsilon. Similarity is genre Jaccard; 'recommended' means exposure >= 1 user.",
+  "template": "What fraction of {{ALPHA}}-similar item pairs have at most {{EPSILON}} gaps in exposure?",
+  "expected_tool": "coverage_disparity",
+  "implementation": "explainrec.metrics.coverage_disparity",
+  "counterfactual": false,
+  "context": {
+    "scenario": "baseline: maximize total predicted rating; every cold item (<=20 ratings) reaches >=5 users; slate size 10",
+    "solution_cache": "solution-1dd476b37aead596.pkl",
+    "n_users": 943,
+    "n_items": 1682
+  },
+  "questions": [
+    {
+      "id": "cd-01",
+      "params": {
+        "alpha": 0.5,
+        "epsilon": 0.05
+      },
+      "question": "Among recommended movies with a genre similarity score of at least 0.5, what share of pairs are shown to numbers of users that differ by no more than 5% of the larger audience?",
+      "paraphrases": [
+        "Heads up from catalog ops: we keep seeing titles that are basically clones of each other land in totally different amounts of shelf space. If you take recommended movie pairs whose genre profiles are at least 50% alike, what fraction of those pairs ends up with exposure within 5% of each other?",
+        "Formal request from the product side: restricting attention to pairs of recommended films whose genre-profile similarity is no less than 0.5, what proportion of them shows an exposure difference of at most 5%?",
+        "Honestly this bugs me: two movies can be half-identical on genre and still get treated completely differently. Out of every recommended pair at 0.5 genre similarity or above, how many of them (as a share) sit within five percent of each other on exposure?",
+        "Our catalog team worries that near-duplicates get very different shelf space. Among pairs of recommended movies whose genre profiles overlap by at least half (similarity 0.5), what fraction have exposure within 5% of each other?"
+      ],
+      "answer": 0.8873,
+      "tolerance": 0.01,
+      "answer_details": {
+        "n_similar_pairs": 80194,
+        "n_within_gap": 71153,
+        "n_recommended": 834
+      }
+    },
+    {
+      "id": "cd-02",
+      "params": {
+        "alpha": 0.5,
+        "epsilon": 0.1
+      },
+      "question": "For recommended movies with a genre similarity score of at least 0.5, what fraction of pairs are shown to numbers of users that differ by at most 10% of the larger audience?",
+      "paraphrases": [
+        "Quick curiosity question: when two recommended movies are 0.5 or more alike in genre, how often does the count of users who get shown them differ by no more than 10%?",
+        "For the audit log, please report the following: among recommended movie pairs with genre similarity of at least 0.5, in what share of pairs is the relative difference in the number of users who see each title bounded by 0.1?",
+        "So if a couple of recommended films overlap at least halfway on genre, what fraction of the time are the two viewer-reach numbers within a tenth of each other?",
+        "If two recommended movies are at least 0.5-similar in genre, how often is the relative gap in how many users see them at most 0.1?"
+      ],
+      "answer": 0.8873,
+      "tolerance": 0.01,
+      "answer_details": {
+        "n_similar_pairs": 80194,
+        "n_within_gap": 71155,
+        "n_recommended": 834
+      }
+    },
+    {
+      "id": "cd-03",
+      "params": {
+        "alpha": 0.5,
+        "epsilon": 0.2
+      },
+      "question": "Among pairs of recommended movies with a genre similarity score of 0.5 or higher, what share have audience counts within 20% of the larger count?",
+      "paraphrases": [
+        "Compliance review, item-level individual fairness: of all recommended movie pairs whose genre similarity is 0.5 or greater, what proportion holds the exposure difference to 20% or less?",
+        "I'm doing a fairness spot-check on the item side. Take recommended movies that are at least 0.5 similar by genre. For what share of those pairs does exposure stay within 0.2 of each other?",
+        "Similar items should get similar treatment, right? So tell me: across recommended pairs with genre similarity of at least 0.5, what fraction keeps the exposure gap under 20%?",
+        "As an auditor I want an individual-fairness check on items: what share of recommended movie pairs with genre similarity 0.5 or higher keeps exposure differences within 20%?"
+      ],
+      "answer": 0.8994,
+      "tolerance": 0.01,
+      "answer_details": {
+        "n_similar_pairs": 80194,
+        "n_within_gap": 72123,
+        "n_recommended": 834
+      }
+    },
+    {
+      "id": "cd-04",
+      "params": {
+        "alpha": 0.5,
+        "epsilon": 0.3
+      },
+      "question": "Take pairs of recommended movies whose genre similarity score is at least 0.5. What fraction have audience counts that differ by no more than 30% of the larger count?",
+      "paraphrases": [
+        "Pull every pair of recommended titles that are at least 0.5 similar on genre. In what fraction of those pairs is the title that gets surfaced less still within 30% of the one surfaced more?",
+        "Analysis request: for all recommended movie pairs whose genres are at least half-alike, compute the proportion in which the lower-displayed title comes within 0.3, relatively, of the higher-displayed one.",
+        "I want the number for pairs of recommended films that overlap 50% or more in genre: how often does the one that gets put in front of fewer people stay within 30 percent of the one that gets put in front of more?",
+        "Take every pair of recommended titles that are at least half-similar by genre. For what fraction of them is the less-shown one within 30% of the more-shown one?"
+      ],
+      "answer": 0.9064,
+      "tolerance": 0.01,
+      "answer_details": {
+        "n_similar_pairs": 80194,
+        "n_within_gap": 72688,
+        "n_recommended": 834
+      }
+    },
+    {
+      "id": "cd-05",
+      "params": {
+        "alpha": 0.5,
+        "epsilon": 0.5
+      },
+      "question": "When two recommended movies have a genre similarity score of at least 0.5, how often do their audience counts differ by at most 50% of the larger audience?",
+      "paraphrases": [
+        "My studio makes films very close to the ones you're pushing. For two recommended movies with genre similarity of at least 0.5, what fraction of the time do the audience counts differ by 50% or less?",
+        "Speaking as a distributor whose catalog overlaps heavily with promoted titles: among recommended pairs at 0.5 genre similarity or above, how often is the difference in how many viewers each one reaches no more than half?",
+        "I make the same kind of movies you're already promoting, so this matters to me. When two recommended films share at least 0.5 in genre similarity, what share of those pairs has viewer counts that differ by at most 0.5 relatively?",
+        "I produce films a lot like others being promoted. When two recommended movies share at least 0.5 genre similarity, how often do their audience counts differ by no more than half?"
+      ],
+      "answer": 0.9162,
+      "tolerance": 0.01,
+      "answer_details": {
+        "n_similar_pairs": 80194,
+        "n_within_gap": 73477,
+        "n_recommended": 834
+      }
+    },
+    {
+      "id": "cd-06",
+      "params": {
+        "alpha": 1.0,
+        "epsilon": 0.05
+      },
+      "question": "Among recommended movies with exactly the same genres, a genre similarity score of 1.0, what share of pairs are shown to numbers of users that differ by no more than 5% of the larger audience?",
+      "paraphrases": [
+        "Two recommended movies with an identical genre profile (similarity 1.0): what proportion of such pairs has exposure that's essentially equal, meaning within 5%?",
+        "Curious about the extreme case. If you only look at recommended films whose genre profiles match exactly, what fraction of those pairs comes out with exposure within 0.05 of each other?",
+        "Genre-wise indistinguishable titles should be getting indistinguishable treatment. Among recommended movie pairs with exactly the same genre profile, what share lands within five percent on exposure?",
+        "Among recommended movies with exactly the same genre profile, what fraction of pairs has essentially equal exposure, within 5%?"
+      ],
+      "answer": 0.9184,
+      "tolerance": 0.01,
+      "answer_details": {
+        "n_similar_pairs": 37915,
+        "n_within_gap": 34821,
+        "n_recommended": 834
+      }
+    },
+    {
+      "id": "cd-07",
+      "params": {
+        "alpha": 1.0,
+        "epsilon": 0.1
+      },
+      "question": "For pairs of recommended movies with exactly the same genres, a genre similarity score of 1.0, what fraction have audience counts within 10% of the larger count?",
+      "paraphrases": [
+        "When a pair of recommended titles has exactly matching genres, how frequently is the exposure gap between them 10% or smaller?",
+        "Please quantify: for recommended movies sharing identical genre labels, what fraction of pairs keeps the exposure difference at or below 0.1?",
+        "Same genres, same movie as far as the shelf is concerned. So how often do two such recommended titles end up with exposure that differs by no more than ten percent?",
+        "When two recommended titles have identical genres, how often is the exposure gap between them at most 10%?"
+      ],
+      "answer": 0.9184,
+      "tolerance": 0.01,
+      "answer_details": {
+        "n_similar_pairs": 37915,
+        "n_within_gap": 34821,
+        "n_recommended": 834
+      }
+    },
+    {
+      "id": "cd-08",
+      "params": {
+        "alpha": 1.0,
+        "epsilon": 0.2
+      },
+      "question": "When recommended movies have exactly the same genres, a genre similarity score of 1.0, what share of pairs are shown to numbers of users that differ by at most 20% of the larger audience?",
+      "paraphrases": [
+        "For recommended movies that are genre-identical (similarity of 1.0), what proportion of pairs stays inside a relative exposure gap of 20%?",
+        "Take the pairs of recommended films whose genre similarity equals 1.0. What share of them has a relative exposure difference no larger than 0.2?",
+        "If two recommended titles carry exactly the same genres (that's similarity 1.0), how many of those pairs, as a fraction, hold the relative exposure gap to 0.2 or under?",
+        "For genre-identical recommended movies (similarity 1.0), what share of pairs stays within a 0.2 relative exposure gap?"
+      ],
+      "answer": 0.925,
+      "tolerance": 0.01,
+      "answer_details": {
+        "n_similar_pairs": 37915,
+        "n_within_gap": 35070,
+        "n_recommended": 834
+      }
+    },
+    {
+      "id": "cd-09",
+      "params": {
+        "alpha": 1.0,
+        "epsilon": 0.3
+      },
+      "question": "Among pairs of recommended movies with exactly the same genres, a genre similarity score of 1.0, how often do their audience counts differ by no more than 30% of the larger count?",
+      "paraphrases": [
+        "Do genre twins actually get treated the same? Of the recommended pairs whose genre sets match exactly, what fraction has exposure differing by 30% or less?",
+        "For the review: among recommended movie pairs with identical genre sets, please report the proportion for which the exposure difference does not exceed 0.3.",
+        "I'd like to know whether identical-genre titles are handled evenhandedly. Out of recommended pairs with matching genre sets, what share sees exposure differ by at most thirty percent?",
+        "Do genre twins get equal treatment? What fraction of recommended pairs with matching genre sets sees exposure differ by at most 30%?"
+      ],
+      "answer": 0.931,
+      "tolerance": 0.01,
+      "answer_details": {
+        "n_similar_pairs": 37915,
+        "n_within_gap": 35300,
+        "n_recommended": 834
+      }
+    },
+    {
+      "id": "cd-10",
+      "params": {
+        "alpha": 1.0,
+        "epsilon": 0.5
+      },
+      "question": "For recommended movies with exactly the same genres, a genre similarity score of 1.0, what fraction of pairs have audience counts within 50% of the larger count?",
+      "paraphrases": [
+        "Looking only at recommended movie pairs with exactly the same genres, what portion of them has the quieter title shown at most 50% less often than the louder one?",
+        "For pairs of recommended films whose genre sets are identical, what fraction has the less-surfaced one falling no more than 0.5 below the more-surfaced one in relative terms?",
+        "Restrict to recommended titles that carry exactly the same genres. In what share of those pairs is the one shown to fewer people down by no more than half compared to the other?",
+        "Looking at pairs of recommended movies with exactly the same genres, what portion has one shown at most 50% less than the other?"
+      ],
+      "answer": 0.9405,
+      "tolerance": 0.01,
+      "answer_details": {
+        "n_similar_pairs": 37915,
+        "n_within_gap": 35658,
+        "n_recommended": 834
+      }
+    }
+  ]
+}

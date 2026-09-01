@@ -1,0 +1,296 @@
+{
+  "bi-01": {
+    "question": "How uneven is MAE across users?",
+    "seed_paraphrases": [
+      "Looking at MAE per user, how unequal is prediction quality across our user base?"
+    ]
+  },
+  "bi-02": {
+    "question": "How uneven across users is the average size of each person's prediction miss?",
+    "seed_paraphrases": [
+      "When the system guesses how someone would rate a movie, it can be off by a star or more. Taking each user's average miss at face value, is that error about the same size for everyone, or do some users get much sloppier guesses?"
+    ]
+  },
+  "bi-03": {
+    "question": "How uneven is RMSE across users?",
+    "seed_paraphrases": [
+      "How much inequality is there across users in RMSE?"
+    ]
+  },
+  "bi-04": {
+    "question": "How uneven across users is their prediction error when big misses count extra?",
+    "seed_paraphrases": [
+      "I care less about small errors and more about the occasional wildly wrong prediction. If we score each user's predictions in a way that punishes big misses extra heavily, is that error burden shared evenly across users?"
+    ]
+  },
+  "bi-05": {
+    "question": "How uneven is the quality of users' lists when a list scores better for putting good matches near the top?",
+    "seed_paraphrases": [
+      "It's not just what's in the list, it's the order: do some users get their best matches buried far down while others see them right at the top? How unequal is that across users?"
+    ]
+  },
+  "bi-06": {
+    "question": "Do some users get much better lists than others when good matches ranked near the top matter most?",
+    "seed_paraphrases": [
+      "Score each user by how well their list is sorted, rewarding hits near the top much more than hits further down. Is that ranking quality distributed fairly across the user base?"
+    ]
+  },
+  "bi-07": {
+    "question": "How uneven across users is the share of a user's top 10 movies that they would like?",
+    "seed_paraphrases": [
+      "Consider the share of each user's top ten that they would actually like. Do all users get a similar hit rate, or is it concentrated on a lucky few?"
+    ]
+  },
+  "bi-08": {
+    "question": "How uneven is Precision across users?",
+    "seed_paraphrases": [
+      "How unequal is Precision across users?"
+    ]
+  },
+  "bi-09": {
+    "question": "How uneven across users is the share of the movies they would love that make it into their top list?",
+    "seed_paraphrases": [
+      "Some users tell us most movies they love never make it into their top list at all. Is the share of a user's loved movies that actually surfaces spread evenly, or do a few users get most of theirs while others get almost none?"
+    ]
+  },
+  "bi-10": {
+    "question": "Do some users get a much larger share of the movies they would love in their top list than others?",
+    "seed_paraphrases": [
+      "For each user, think of how much of everything they would rate highly ends up captured in their top recommendations. How uneven is that capture rate across users?"
+    ]
+  },
+  "cov-01": {
+    "question": "What share of all movies is recommended to at least one user?",
+    "seed_paraphrases": [
+      "What fraction of items are being recommended at least once?"
+    ]
+  },
+  "cd-01": {
+    "question": "Among recommended movies with a genre similarity score of at least 0.5, what share of pairs are shown to numbers of users that differ by no more than 5% of the larger audience?",
+    "seed_paraphrases": [
+      "Our catalog team worries that near-duplicates get very different shelf space. Among pairs of recommended movies whose genre profiles overlap by at least half (similarity 0.5), what fraction have exposure within 5% of each other?"
+    ]
+  },
+  "cd-02": {
+    "question": "For recommended movies with a genre similarity score of at least 0.5, what fraction of pairs are shown to numbers of users that differ by at most 10% of the larger audience?",
+    "seed_paraphrases": [
+      "If two recommended movies are at least 0.5-similar in genre, how often is the relative gap in how many users see them at most 0.1?"
+    ]
+  },
+  "cd-03": {
+    "question": "Among pairs of recommended movies with a genre similarity score of 0.5 or higher, what share have audience counts within 20% of the larger count?",
+    "seed_paraphrases": [
+      "As an auditor I want an individual-fairness check on items: what share of recommended movie pairs with genre similarity 0.5 or higher keeps exposure differences within 20%?"
+    ]
+  },
+  "cd-04": {
+    "question": "Take pairs of recommended movies whose genre similarity score is at least 0.5. What fraction have audience counts that differ by no more than 30% of the larger count?",
+    "seed_paraphrases": [
+      "Take every pair of recommended titles that are at least half-similar by genre. For what fraction of them is the less-shown one within 30% of the more-shown one?"
+    ]
+  },
+  "cd-05": {
+    "question": "When two recommended movies have a genre similarity score of at least 0.5, how often do their audience counts differ by at most 50% of the larger audience?",
+    "seed_paraphrases": [
+      "I produce films a lot like others being promoted. When two recommended movies share at least 0.5 genre similarity, how often do their audience counts differ by no more than half?"
+    ]
+  },
+  "cd-06": {
+    "question": "Among recommended movies with exactly the same genres, a genre similarity score of 1.0, what share of pairs are shown to numbers of users that differ by no more than 5% of the larger audience?",
+    "seed_paraphrases": [
+      "Among recommended movies with exactly the same genre profile, what fraction of pairs has essentially equal exposure, within 5%?"
+    ]
+  },
+  "cd-07": {
+    "question": "For pairs of recommended movies with exactly the same genres, a genre similarity score of 1.0, what fraction have audience counts within 10% of the larger count?",
+    "seed_paraphrases": [
+      "When two recommended titles have identical genres, how often is the exposure gap between them at most 10%?"
+    ]
+  },
+  "cd-08": {
+    "question": "When recommended movies have exactly the same genres, a genre similarity score of 1.0, what share of pairs are shown to numbers of users that differ by at most 20% of the larger audience?",
+    "seed_paraphrases": [
+      "For genre-identical recommended movies (similarity 1.0), what share of pairs stays within a 0.2 relative exposure gap?"
+    ]
+  },
+  "cd-09": {
+    "question": "Among pairs of recommended movies with exactly the same genres, a genre similarity score of 1.0, how often do their audience counts differ by no more than 30% of the larger count?",
+    "seed_paraphrases": [
+      "Do genre twins get equal treatment? What fraction of recommended pairs with matching genre sets sees exposure differ by at most 30%?"
+    ]
+  },
+  "cd-10": {
+    "question": "For recommended movies with exactly the same genres, a genre similarity score of 1.0, what fraction of pairs have audience counts within 50% of the larger count?",
+    "seed_paraphrases": [
+      "Looking at pairs of recommended movies with exactly the same genres, what portion has one shown at most 50% less than the other?"
+    ]
+  },
+  "dp-01": {
+    "question": "For men and women, is the average share of their top 10 recommendations predicted at 4 stars or higher no more than 5 percentage points, or 0.05, apart?",
+    "seed_paraphrases": [
+      "A fairness review is due: comparing the share of their 10 recommendations predicted at 4 stars or better, do men and women stay within 0.05 of each other?"
+    ]
+  },
+  "dp-02": {
+    "question": "For men and women, is the average share of their top 10 recommendations predicted at 4 stars or higher no more than 1 percentage point, or 0.01, apart?",
+    "seed_paraphrases": [
+      "If we insist on near-perfect parity - a difference of at most 0.01 - do male and female users get the same proportion of 4-star-or-better picks among their 10 recommendations?"
+    ]
+  },
+  "dp-03": {
+    "question": "For men and women, is the average share of their top 5 recommendations predicted at 4 stars or higher no more than 5 percentage points, or 0.05, apart?",
+    "seed_paraphrases": [
+      "Just looking at everyone's top five: is the share that men and women would rate at least 4 stars within 0.05 of each other?"
+    ]
+  },
+  "dp-04": {
+    "question": "For men and women, is the average share of their top 10 recommendations predicted at 3 stars or higher no more than 2 percentage points, or 0.02, apart?",
+    "seed_paraphrases": [
+      "Set the bar low, at 3 stars: across their slates of 10, do men and women receive comparably acceptable recommendations, allowing a gap of at most 0.02?"
+    ]
+  },
+  "dp-05": {
+    "question": "For women and men, is the average share of their top 10 recommendations predicted at 5 stars no more than 1 percentage point, or 0.01, apart?",
+    "seed_paraphrases": [
+      "Counting only predicted 5-star picks in each user's 10 recommendations, are women and men served equally, tolerating at most a 0.01 difference?"
+    ]
+  },
+  "dp-06": {
+    "question": "For users under 30 and users 30 or older, is the average share of their top 10 recommendations predicted at 4 stars or higher no more than 5 percentage points, or 0.05, apart?",
+    "seed_paraphrases": [
+      "Our younger audience suspects the system favors older people: is the proportion of 4+ star picks in the 10 recommendations of users under 30 within 0.05 of the 30-and-older group's?"
+    ]
+  },
+  "dp-07": {
+    "question": "For users under 25 and users 45 or older, is the average share of their top 10 recommendations predicted at 4 stars or higher no more than 5 percentage points, or 0.05, apart?",
+    "seed_paraphrases": [
+      "Compare the youngest segment (under 25) with the oldest (45 and older): do they get the same share of their 10 recommendations that they'd rate at least 4 stars, give or take at most 0.05?"
+    ]
+  },
+  "dp-08": {
+    "question": "For students and engineers, is the average share of their top 10 recommendations predicted at 4 stars or higher no more than 5 percentage points, or 0.05, apart?",
+    "seed_paraphrases": [
+      "Do students and engineers see equally satisfying slates - that is, proportions of predicted 4-star-plus picks among their 10 recommendations within 0.05 of each other?"
+    ]
+  },
+  "dp-09": {
+    "question": "For students and retired users, is the average share of their top 10 recommendations predicted at 4 stars or higher no more than 10 percentage points, or 0.10, apart?",
+    "seed_paraphrases": [
+      "With a loose tolerance of 0.1, are students and retired users getting comparable fractions of 4+ star recommendations in their lists of 10?"
+    ]
+  },
+  "dp-10": {
+    "question": "For educators and programmers, is the average share of their top 10 recommendations predicted at 4 stars or higher no more than 5 percentage points, or 0.05, apart?",
+    "seed_paraphrases": [
+      "Educators versus programmers: do their 10-item lists carry the same share of movies predicted at 4 stars or better, within 0.05?"
+    ]
+  },
+  "gc-01": {
+    "question": "How far apart are the share of Drama movies recommended to at least one user and the share of all non-Drama movies recommended at least once?",
+    "seed_paraphrases": [
+      "As a drama producer I want to know: does the share of drama titles that get recommended at all differ from the share among all other movies, and by how much?"
+    ]
+  },
+  "gc-02": {
+    "question": "How far apart are the share of Comedy movies recommended to at least one user and the share of all non-Comedy movies recommended at least once?",
+    "seed_paraphrases": [
+      "Compare comedies with the rest of the catalog: how different is the fraction of titles reaching at least one user's list?"
+    ]
+  },
+  "gc-03": {
+    "question": "How far apart are the share of Horror movies recommended to at least one user and the share of all non-Horror movies recommended at least once?",
+    "seed_paraphrases": [
+      "Horror filmmakers feel sidelined. What is the gap between the portion of horror movies being recommended and the portion of everything else?"
+    ]
+  },
+  "gc-04": {
+    "question": "How far apart are the share of Documentary movies recommended to at least one user and the share of all non-Documentary movies recommended at least once?",
+    "seed_paraphrases": [
+      "Do documentaries get onto recommendation lists at the same rate as the rest of the catalog, or is there a coverage gap?"
+    ]
+  },
+  "gc-05": {
+    "question": "How far apart are the share of Children's movies recommended to at least one user and the share of all other movies recommended at least once?",
+    "seed_paraphrases": [
+      "Family-content partners ask whether children's titles are underexposed: how far apart are the within-group recommendation rate of Children's movies and that of the remaining catalog?"
+    ]
+  },
+  "gc-06": {
+    "question": "How far apart are the share of Action movies recommended to at least one user and the share of all non-Action movies recommended at least once?",
+    "seed_paraphrases": [
+      "Is an action movie as likely as a non-action movie to be recommended to at least one user? How large is the difference in those rates?"
+    ]
+  },
+  "gc-07": {
+    "question": "How far apart are the share of Musical movies recommended to at least one user and the share of all non-Musical movies recommended at least once?",
+    "seed_paraphrases": [
+      "Among musicals, what share of titles is recommended at all, and how much does that differ from non-musicals?"
+    ]
+  },
+  "gc-08": {
+    "question": "How far apart are the share of movies released before 1980 recommended to at least one user and the share of movies from 1980 onward recommended at least once?",
+    "seed_paraphrases": [
+      "Classic-film distributors want numbers: do titles released before 1980 get recommended at a different rate than newer ones, and what is the gap?"
+    ]
+  },
+  "gc-09": {
+    "question": "How far apart are the share of movies released before 1990 recommended to at least one user and the share of movies from 1990 onward recommended at least once?",
+    "seed_paraphrases": [
+      "Is there a coverage gap between movies from before 1990 and those from 1990 onward - what fraction of each group gets recommended?"
+    ]
+  },
+  "gc-10": {
+    "question": "For movies with at most 20 ratings, how far is the share recommended to at least one user from the share for movies with more than 20 ratings?",
+    "seed_paraphrases": [
+      "For movies with little rating history (at most 20 ratings), how does the fraction that gets recommended compare with the rest of the catalog? Give me the gap."
+    ]
+  },
+  "wg-01": {
+    "question": "Between male and female users, which group has the lower average predicted rating across its top 10 recommendations, and is that average within 0.05 stars of the higher group's?",
+    "seed_paraphrases": [
+      "Between men and women, who draws the short straw on the average predicted enjoyment of their 10 recommendations, and is the worse-off group within 0.05 of the better-served one?"
+    ]
+  },
+  "wg-02": {
+    "question": "Between male and female users, which group gets the smaller share of movies predicted at 4 stars or higher in its top 10, and is that share within 5 percentage points, or 0.05, of the other group's?",
+    "seed_paraphrases": [
+      "Counting the share of their 10 picks predicted at 4 stars or more, which gender fares worst, and is its share at most 0.05 below the other's?"
+    ]
+  },
+  "wg-03": {
+    "question": "Between male and female users, which group has the lower average predicted rating across its top 5 recommendations, and is that average within 0.05 stars of the higher group's?",
+    "seed_paraphrases": [
+      "If we only look at each person's top five, which gender ends up with the lower average predicted rating, and does it stay within 0.05 of the other?"
+    ]
+  },
+  "wg-04": {
+    "question": "Among users under 25, ages 25 to 34, ages 35 to 44, and ages 45 or older, which group has the lowest average predicted rating across its top 10 recommendations, and is it within 0.10 stars of the highest group?",
+    "seed_paraphrases": [
+      "Across the age brackets under 25, 25-34, 35-44 and 45 and older, which bracket gets the least enjoyable 10 recommendations by average predicted rating, and is it within 0.1 of the best-served bracket?"
+    ]
+  },
+  "wg-05": {
+    "question": "Among users under 25, ages 25 to 34, ages 35 to 44, and ages 45 or older, which group gets the smallest share of movies predicted at 4 stars or higher in its top 10, and is that share within 10 percentage points, or 0.10, of the best group's?",
+    "seed_paraphrases": [
+      "Which age group - under 25, 25-34, 35-44, or 45 and older - sees the smallest share of 4+ star picks among their 10 recommendations, and is that share within 0.1 of the best group's?"
+    ]
+  },
+  "wg-06": {
+    "question": "Among users under 25, ages 25 to 34, ages 35 to 44, and ages 45 or older, which group has the lowest average predicted rating across its top 5 recommendations, and is it within 0.10 stars of the highest group?",
+    "seed_paraphrases": [
+      "Looking at top-5 lists only, which of the four age brackets (under 25, 25-34, 35-44, 45 and older) has the lowest mean predicted rating, and is the spread between the best and worst brackets at most 0.1?"
+    ]
+  },
+  "wg-07": {
+    "question": "Among students, engineers, educators, programmers, and writers, which group has the lowest average predicted rating across its top 10 recommendations, and is it within 0.10 stars of the highest group?",
+    "seed_paraphrases": [
+      "Among students, engineers, educators, programmers and writers, whose 10 recommendations look least enjoyable on average predicted rating, and does the worst-off profession stay within 0.1 of the best?"
+    ]
+  },
+  "wg-08": {
+    "question": "Among administrators, artists, retired users, writers, and students, which group gets the smallest share of movies predicted at 4 stars or higher in its top 10, and is that share within 10 percentage points, or 0.10, of the best group's?",
+    "seed_paraphrases": [
+      "Of administrators, artists, retired users, writers and students, which group gets the smallest fraction of predicted 4-star-plus movies in their 10 picks - and is that within 0.1 of the best-served group?"
+    ]
+  }
+}

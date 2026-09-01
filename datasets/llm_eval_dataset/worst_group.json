@@ -1,0 +1,304 @@
+{
+  "set_id": "worst-group-v1",
+  "definition": "Worst-group / maximin fairness: per-group utility of the top-k recommendations (mean predicted rating, or the fraction of recommendations predicted at >= 4 stars); the answer names the worst-served group and reports the best-worst gap and whether it is within the bound.",
+  "template": "Among {{GROUPS}}, which user group gets the least enjoyable {{K}} recommendations according to {{UTILITY}}, and is its utility within {{BOUND}} of the best-served group?",
+  "expected_tool": "worst_group",
+  "implementation": "explainrec.metrics.worst_group",
+  "counterfactual": false,
+  "context": {
+    "scenario": "baseline: maximize total predicted rating; every cold item (<=20 ratings) reaches >=5 users; slate size 10",
+    "solution_cache": "solution-1dd476b37aead596.pkl",
+    "n_users": 943,
+    "n_items": 1682
+  },
+  "questions": [
+    {
+      "id": "wg-01",
+      "question": "Between male and female users, which group has the lower average predicted rating across its top 10 recommendations, and is that average within 0.05 stars of the higher group's?",
+      "params": {
+        "groups": [
+          "male users",
+          "female users"
+        ],
+        "k": 10,
+        "utility": "mean_predicted_rating",
+        "bound": 0.05
+      },
+      "paraphrases": [
+        "Real talk: when you average out how much each person is expected to like the 10 movies you put in front of them, do men or women end up shortchanged? And is the group that loses out sitting within 0.05 of the group that's better served?",
+        "Please identify which gender, men or women, receives the lower mean predicted enjoyment across their 10 recommended items, and state whether that disadvantaged group falls within 0.05 of the better-served gender.",
+        "For our gender split: averaging the expected enjoyment of the 10 items in each user's slate, which side (male or female) lands lower, and is the gap between the worse-off and the better-off side no more than 0.05?",
+        "Between men and women, who draws the short straw on the average predicted enjoyment of their 10 recommendations, and is the worse-off group within 0.05 of the better-served one?"
+      ],
+      "expected_choice": "female users",
+      "answer": 0.3643,
+      "answer_bool": false,
+      "tolerance": 0.02,
+      "answer_details": {
+        "best_group": "male users",
+        "per_group": {
+          "male users": 4.1862,
+          "female users": 3.8219
+        },
+        "k": 10,
+        "utility": "mean_predicted_rating",
+        "bound": 0.05
+      }
+    },
+    {
+      "id": "wg-02",
+      "question": "Between male and female users, which group gets the smaller share of movies predicted at 4 stars or higher in its top 10, and is that share within 5 percentage points, or 0.05, of the other group's?",
+      "params": {
+        "groups": [
+          "male users",
+          "female users"
+        ],
+        "k": 10,
+        "utility": "fraction_predicted_at_least_4",
+        "bound": 0.05
+      },
+      "paraphrases": [
+        "Take the proportion of each user's 10 recommendations that we expect to hit 4 stars or better and split it by gender: which gender comes out on the losing end, and is it trailing the other by no more than 0.05?",
+        "Considering the fraction of the 10 recommended titles forecast at four stars or above, please state which gender is worst off and whether its fraction sits no more than 5 percentage points below the other gender's.",
+        "Out of the 10 things you recommend to someone, how many are predicted at 4 stars or higher? Comparing men against women on that share, who's worse off, and is that group's share within 0.05 of the other's?",
+        "Counting the share of their 10 picks predicted at 4 stars or more, which gender fares worst, and is its share at most 0.05 below the other's?"
+      ],
+      "expected_choice": "female users",
+      "answer": 0.2654,
+      "answer_bool": false,
+      "tolerance": 0.005,
+      "answer_details": {
+        "best_group": "male users",
+        "per_group": {
+          "male users": 0.6973,
+          "female users": 0.4319
+        },
+        "k": 10,
+        "utility": "fraction_predicted_at_least_4",
+        "bound": 0.05
+      }
+    },
+    {
+      "id": "wg-03",
+      "question": "Between male and female users, which group has the lower average predicted rating across its top 5 recommendations, and is that average within 0.05 stars of the higher group's?",
+      "params": {
+        "groups": [
+          "male users",
+          "female users"
+        ],
+        "k": 5,
+        "utility": "mean_predicted_rating",
+        "bound": 0.05
+      },
+      "paraphrases": [
+        "Zoom in on just the top five recommendations per user: which gender ends up with the lower average predicted rating, and does that gender stay within 0.05 of the other?",
+        "Restricting attention to each user's five highest-ranked recommendations, which gender exhibits the lower mean predicted rating, and is the difference from the other gender at most 0.05?",
+        "Forget the full slate for a second: on the top-5 only, is it men or women who get the weaker average predicted rating, and is that group still within 0.05 of the other one?",
+        "If we only look at each person's top five, which gender ends up with the lower average predicted rating, and does it stay within 0.05 of the other?"
+      ],
+      "expected_choice": "female users",
+      "answer": 0.17,
+      "answer_bool": false,
+      "tolerance": 0.02,
+      "answer_details": {
+        "best_group": "male users",
+        "per_group": {
+          "male users": 4.4626,
+          "female users": 4.2926
+        },
+        "k": 5,
+        "utility": "mean_predicted_rating",
+        "bound": 0.05
+      }
+    },
+    {
+      "id": "wg-04",
+      "question": "Among users under 25, ages 25 to 34, ages 35 to 44, and ages 45 or older, which group has the lowest average predicted rating across its top 10 recommendations, and is it within 0.10 stars of the highest group?",
+      "params": {
+        "groups": [
+          "users under 25",
+          "users 25-34",
+          "users 35-44",
+          "users 45 and older"
+        ],
+        "k": 10,
+        "utility": "mean_predicted_rating",
+        "bound": 0.1
+      },
+      "paraphrases": [
+        "We slice users into four age bands: under 25, 25 to 34, 35 to 44, and 45 or older. Which band's 10 recommendations come out lowest on average predicted rating, and is it within 0.1 of the band that does best?",
+        "Across four age cohorts (below 25, 25-34, 35-44, and 45 and up), please report which cohort's slate of 10 recommendations carries the lowest mean predicted rating, and whether that cohort lies within 0.1 of the top-scoring cohort.",
+        "Curious about age here: of the under-25s, the 25-34s, the 35-44s, and the 45-and-over crowd, whose 10 recommended movies look least enjoyable by average predicted rating, and is the gap to the best-served bracket no bigger than 0.1?",
+        "Across the age brackets under 25, 25-34, 35-44 and 45 and older, which bracket gets the least enjoyable 10 recommendations by average predicted rating, and is it within 0.1 of the best-served bracket?"
+      ],
+      "expected_choice": "users 35-44",
+      "answer": 0.0923,
+      "answer_bool": true,
+      "tolerance": 0.02,
+      "answer_details": {
+        "best_group": "users under 25",
+        "per_group": {
+          "users under 25": 4.1251,
+          "users 25-34": 4.1024,
+          "users 35-44": 4.0328,
+          "users 45 and older": 4.0426
+        },
+        "k": 10,
+        "utility": "mean_predicted_rating",
+        "bound": 0.1
+      }
+    },
+    {
+      "id": "wg-05",
+      "question": "Among users under 25, ages 25 to 34, ages 35 to 44, and ages 45 or older, which group gets the smallest share of movies predicted at 4 stars or higher in its top 10, and is that share within 10 percentage points, or 0.10, of the best group's?",
+      "params": {
+        "groups": [
+          "users under 25",
+          "users 25-34",
+          "users 35-44",
+          "users 45 and older"
+        ],
+        "k": 10,
+        "utility": "fraction_predicted_at_least_4",
+        "bound": 0.1
+      },
+      "paraphrases": [
+        "For each age bracket (under 25, 25-34, 35-44, and 45 and older), what fraction of the 10 recommendations is predicted at 4 stars or more? Which bracket has the smallest fraction, and is it within 0.1 of the highest bracket's?",
+        "Among the four age groups (under 25, 25 to 34, 35 to 44, and 45 and older), which group receives the lowest proportion of items predicted at four stars or better within their 10 recommendations, and does that proportion fall within 10 percentage points of the leading group's?",
+        "Of the 10 slots we fill for a user, how many are expected to land at 4 stars or above? Break it down by age (under 25, 25-34, 35-44, 45 and over): which group has the thinnest share, and is that share within 0.1 of the best group's?",
+        "Which age group - under 25, 25-34, 35-44, or 45 and older - sees the smallest share of 4+ star picks among their 10 recommendations, and is that share within 0.1 of the best group's?"
+      ],
+      "expected_choice": "users 45 and older",
+      "answer": 0.0835,
+      "answer_bool": true,
+      "tolerance": 0.005,
+      "answer_details": {
+        "best_group": "users under 25",
+        "per_group": {
+          "users under 25": 0.6577,
+          "users 25-34": 0.6468,
+          "users 35-44": 0.5825,
+          "users 45 and older": 0.5741
+        },
+        "k": 10,
+        "utility": "fraction_predicted_at_least_4",
+        "bound": 0.1
+      }
+    },
+    {
+      "id": "wg-06",
+      "question": "Among users under 25, ages 25 to 34, ages 35 to 44, and ages 45 or older, which group has the lowest average predicted rating across its top 5 recommendations, and is it within 0.10 stars of the highest group?",
+      "params": {
+        "groups": [
+          "users under 25",
+          "users 25-34",
+          "users 35-44",
+          "users 45 and older"
+        ],
+        "k": 5,
+        "utility": "mean_predicted_rating",
+        "bound": 0.1
+      },
+      "paraphrases": [
+        "Using only the top-5 recommendations: across under 25, 25-34, 35-44, and 45 and older, which bracket has the lowest mean predicted rating, and is the best-to-worst spread no more than 0.1?",
+        "Considering exclusively each user's five top-ranked recommendations, identify the age bracket (under 25, 25-34, 35-44, 45 and older) with the lowest average predicted rating, and state whether the range between the highest and lowest brackets is at most 0.1.",
+        "Cut the slates down to five items. Out of the four age bands (under 25, 25-34, 35-44, 45-plus), who sits at the bottom on mean predicted rating, and is the distance from the top band to the bottom band 0.1 or less?",
+        "Looking at top-5 lists only, which of the four age brackets (under 25, 25-34, 35-44, 45 and older) has the lowest mean predicted rating, and is the spread between the best and worst brackets at most 0.1?"
+      ],
+      "expected_choice": "users 35-44",
+      "answer": 0.0212,
+      "answer_bool": true,
+      "tolerance": 0.02,
+      "answer_details": {
+        "best_group": "users under 25",
+        "per_group": {
+          "users under 25": 4.4192,
+          "users 25-34": 4.4179,
+          "users 35-44": 4.398,
+          "users 45 and older": 4.4143
+        },
+        "k": 5,
+        "utility": "mean_predicted_rating",
+        "bound": 0.1
+      }
+    },
+    {
+      "id": "wg-07",
+      "question": "Among students, engineers, educators, programmers, and writers, which group has the lowest average predicted rating across its top 10 recommendations, and is it within 0.10 stars of the highest group?",
+      "params": {
+        "groups": [
+          "students",
+          "engineers",
+          "educators",
+          "programmers",
+          "writers"
+        ],
+        "k": 10,
+        "utility": "mean_predicted_rating",
+        "bound": 0.1
+      },
+      "paraphrases": [
+        "Comparing students, engineers, educators, programmers and writers: which occupation's 10 recommendations rank lowest on average predicted rating, and does that bottom occupation sit within 0.1 of the top one?",
+        "For the five occupations students, engineers, educators, programmers and writers, please report which one's 10 recommended items show the lowest mean predicted rating, and whether that occupation remains within 0.1 of the best-performing occupation.",
+        "Job-wise: students, engineers, educators, programmers, writers. Whose set of 10 recommendations looks least enjoyable by average predicted rating, and is that group no more than 0.1 behind the best group?",
+        "Among students, engineers, educators, programmers and writers, whose 10 recommendations look least enjoyable on average predicted rating, and does the worst-off profession stay within 0.1 of the best?"
+      ],
+      "expected_choice": "writers",
+      "answer": 0.2679,
+      "answer_bool": false,
+      "tolerance": 0.02,
+      "answer_details": {
+        "best_group": "engineers",
+        "per_group": {
+          "students": 4.1061,
+          "engineers": 4.2802,
+          "educators": 4.0504,
+          "programmers": 4.1674,
+          "writers": 4.0123
+        },
+        "k": 10,
+        "utility": "mean_predicted_rating",
+        "bound": 0.1
+      }
+    },
+    {
+      "id": "wg-08",
+      "question": "Among administrators, artists, retired users, writers, and students, which group gets the smallest share of movies predicted at 4 stars or higher in its top 10, and is that share within 10 percentage points, or 0.10, of the best group's?",
+      "params": {
+        "groups": [
+          "administrators",
+          "artists",
+          "retired users",
+          "writers",
+          "students"
+        ],
+        "k": 10,
+        "utility": "fraction_predicted_at_least_4",
+        "bound": 0.1
+      },
+      "paraphrases": [
+        "Across administrators, artists, retired users, writers and students: which group gets the smallest share of movies predicted at 4 stars or higher out of their 10 recommendations, and is that share within 0.1 of the best-served group's?",
+        "Among the occupation groups administrator, artist, retired, writer and student, identify the group with the lowest proportion of items forecast at four stars or above in their 10 recommendations, and indicate whether that proportion is within 10 percentage points of the best-served group's.",
+        "Ten recommendations per user, and we count the ones predicted to be 4 stars or better. Which of administrators, artists, retired folks, writers and students ends up with the thinnest fraction, and is it within 0.1 of the group doing best?",
+        "Of administrators, artists, retired users, writers and students, which group gets the smallest fraction of predicted 4-star-plus movies in their 10 picks - and is that within 0.1 of the best-served group?"
+      ],
+      "expected_choice": "retired users",
+      "answer": 0.1765,
+      "answer_bool": false,
+      "tolerance": 0.005,
+      "answer_details": {
+        "best_group": "students",
+        "per_group": {
+          "administrators": 0.6038,
+          "artists": 0.5893,
+          "retired users": 0.4643,
+          "writers": 0.6244,
+          "students": 0.6408
+        },
+        "k": 10,
+        "utility": "fraction_predicted_at_least_4",
+        "bound": 0.1
+      }
+    }
+  ]
+}

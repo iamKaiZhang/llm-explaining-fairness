@@ -1,0 +1,350 @@
+{
+  "set_id": "demographic-parity-v1",
+  "definition": "Demographic parity, user side: for each user, the proportion of their top-k recommendations with predicted rating >= stars ('would rate' is defined on the model's predictions, since recommended items have no observed ratings); group value = mean over the group's users; parity holds if the absolute gap between the two groups is at most the bound. Top-k = the k slate items with the highest predicted rating.",
+  "template": "Do users {{GROUP-X}} and users {{GROUP-Y}} get the same proportion of their {{K}} recommendations that they would rate at least {{STARS}} stars, allowing a difference of at most {{BOUND}}?",
+  "expected_tool": "demographic_parity",
+  "implementation": "explainrec.metrics.demographic_parity",
+  "counterfactual": false,
+  "context": {
+    "scenario": "baseline: maximize total predicted rating; every cold item (<=20 ratings) reaches >=5 users; slate size 10",
+    "solution_cache": "solution-1dd476b37aead596.pkl",
+    "n_users": 943,
+    "n_items": 1682
+  },
+  "questions": [
+    {
+      "id": "dp-01",
+      "question": "For men and women, is the average share of their top 10 recommendations predicted at 4 stars or higher no more than 5 percentage points, or 0.05, apart?",
+      "params": {
+        "group_x": {
+          "attribute": "gender",
+          "value": "M"
+        },
+        "group_y": {
+          "attribute": "gender",
+          "value": "F"
+        },
+        "k": 10,
+        "stars": 4,
+        "bound": 0.05
+      },
+      "paraphrases": [
+        "I'm putting together a fairness audit. For each user's list of 10 recommendations, take the fraction predicted at 4 stars or higher: does that fraction differ between men and women by no more than 0.05?",
+        "Quick question before our compliance sign-off: among the 10 items we recommend to each person, the portion forecast to hit 4 stars or above, is that portion roughly equal for male and female users (within a 5% margin)?",
+        "Fairness report deadline is looming. Men versus women, looking at how much of their 10-recommendation slate is predicted at 4+ stars: do the two groups land within 0.05 of one another?",
+        "A fairness review is due: comparing the share of their 10 recommendations predicted at 4 stars or better, do men and women stay within 0.05 of each other?"
+      ],
+      "answer": 0.2654,
+      "answer_bool": false,
+      "tolerance": 0.005,
+      "answer_details": {
+        "proportion_x": 0.6973,
+        "proportion_y": 0.4319,
+        "k": 10,
+        "stars": 4,
+        "bound": 0.05
+      }
+    },
+    {
+      "id": "dp-02",
+      "question": "For men and women, is the average share of their top 10 recommendations predicted at 4 stars or higher no more than 1 percentage point, or 0.01, apart?",
+      "params": {
+        "group_x": {
+          "attribute": "gender",
+          "value": "M"
+        },
+        "group_y": {
+          "attribute": "gender",
+          "value": "F"
+        },
+        "k": 10,
+        "stars": 4,
+        "bound": 0.01
+      },
+      "paraphrases": [
+        "Suppose we demand almost exact equality, a maximum gap of 0.01. Would male and female users then be receiving the same fraction of 4-star-or-higher items within their 10 recommendations?",
+        "Tighten the screws: with only a 1% difference allowed, is the portion of each user's 10 recommendations predicted at 4 stars or above the same for women as for men?",
+        "I want to know how strict we can be. If the allowed discrepancy is just 0.01, do men and women still come out even on the share of their 10 recommended titles projected at 4 stars or better?",
+        "If we insist on near-perfect parity - a difference of at most 0.01 - do male and female users get the same proportion of 4-star-or-better picks among their 10 recommendations?"
+      ],
+      "answer": 0.2654,
+      "answer_bool": false,
+      "tolerance": 0.005,
+      "answer_details": {
+        "proportion_x": 0.6973,
+        "proportion_y": 0.4319,
+        "k": 10,
+        "stars": 4,
+        "bound": 0.01
+      }
+    },
+    {
+      "id": "dp-03",
+      "question": "For men and women, is the average share of their top 5 recommendations predicted at 4 stars or higher no more than 5 percentage points, or 0.05, apart?",
+      "params": {
+        "group_x": {
+          "attribute": "gender",
+          "value": "M"
+        },
+        "group_y": {
+          "attribute": "gender",
+          "value": "F"
+        },
+        "k": 5,
+        "stars": 4,
+        "bound": 0.05
+      },
+      "paraphrases": [
+        "Restrict attention to the top five items for every user: is the fraction they'd score at 4 stars or more about the same for men and women, within 0.05?",
+        "What if slates were only five items long? Would the proportion of those five that users would rate 4 stars or higher be within 0.05 across male and female users?",
+        "Cutting each list down to five recommendations: men versus women, does the share predicted to earn at least 4 stars stay within a 5% gap?",
+        "Just looking at everyone's top five: is the share that men and women would rate at least 4 stars within 0.05 of each other?"
+      ],
+      "answer": 0.1689,
+      "answer_bool": false,
+      "tolerance": 0.005,
+      "answer_details": {
+        "proportion_x": 0.9161,
+        "proportion_y": 0.7473,
+        "k": 5,
+        "stars": 4,
+        "bound": 0.05
+      }
+    },
+    {
+      "id": "dp-04",
+      "question": "For men and women, is the average share of their top 10 recommendations predicted at 3 stars or higher no more than 2 percentage points, or 0.02, apart?",
+      "params": {
+        "group_x": {
+          "attribute": "gender",
+          "value": "M"
+        },
+        "group_y": {
+          "attribute": "gender",
+          "value": "F"
+        },
+        "k": 10,
+        "stars": 3,
+        "bound": 0.02
+      },
+      "paraphrases": [
+        "Let's use a generous threshold of 3 stars. Over slates of 10 items, do male and female users end up with similar fractions of acceptable recommendations, with a permitted gap no larger than 0.02?",
+        "Lowering the quality bar to 3 stars: in the 10 recommendations each user receives, is the proportion clearing that bar equal for men and women to within 2%?",
+        "If merely reaching 3 stars counts as acceptable, do women and men get comparable shares of acceptable items across their 10-item slates, tolerating at most a 0.02 difference?",
+        "Set the bar low, at 3 stars: across their slates of 10, do men and women receive comparably acceptable recommendations, allowing a gap of at most 0.02?"
+      ],
+      "answer": 0.1013,
+      "answer_bool": false,
+      "tolerance": 0.005,
+      "answer_details": {
+        "proportion_x": 0.9669,
+        "proportion_y": 0.8656,
+        "k": 10,
+        "stars": 3,
+        "bound": 0.02
+      }
+    },
+    {
+      "id": "dp-05",
+      "question": "For women and men, is the average share of their top 10 recommendations predicted at 5 stars no more than 1 percentage point, or 0.01, apart?",
+      "params": {
+        "group_x": {
+          "attribute": "gender",
+          "value": "F"
+        },
+        "group_y": {
+          "attribute": "gender",
+          "value": "M"
+        },
+        "k": 10,
+        "stars": 5,
+        "bound": 0.01
+      },
+      "paraphrases": [
+        "Narrow it to top-quality hits only: out of each user's 10 recommendations, count just the ones predicted at a full 5 stars. Is that proportion the same for women and men, allowing a difference of 0.01 at most?",
+        "Considering only the 5-star predictions inside each 10-item slate, are men and women treated equally, with a tolerance of just 1%?",
+        "Strictest cut possible: predicted 5-star picks only, within lists of 10. Does the share differ between female and male users by 0.01 or less?",
+        "Counting only predicted 5-star picks in each user's 10 recommendations, are women and men served equally, tolerating at most a 0.01 difference?"
+      ],
+      "answer": 0.0046,
+      "answer_bool": true,
+      "tolerance": 0.005,
+      "answer_details": {
+        "proportion_x": 0.0242,
+        "proportion_y": 0.0196,
+        "k": 10,
+        "stars": 5,
+        "bound": 0.01
+      }
+    },
+    {
+      "id": "dp-06",
+      "question": "For users under 30 and users 30 or older, is the average share of their top 10 recommendations predicted at 4 stars or higher no more than 5 percentage points, or 0.05, apart?",
+      "params": {
+        "group_x": {
+          "attribute": "age",
+          "min": 0,
+          "max": 29
+        },
+        "group_y": {
+          "attribute": "age",
+          "min": 30,
+          "max": 200
+        },
+        "k": 10,
+        "stars": 4,
+        "bound": 0.05
+      },
+      "paraphrases": [
+        "Complaints are coming in from our under-30 users, who think older members get better treatment. Is the fraction of 4-or-more-star picks in the 10 recommendations for the under-30 crowd within 0.05 of the fraction for users aged 30 and up?",
+        "Younger members allege age bias in their favor of the older cohort. Checking the portion of each 10-item slate predicted at 4 stars or better: do users below 30 land within 5% of those 30 and older?",
+        "There's a perception among our under-30 segment that we skew toward older users. Compare the share of the 10 recommendations forecast at 4+ stars for the under-30 group against the 30-and-over group: is the difference 0.05 or less?",
+        "Our younger audience suspects the system favors older people: is the proportion of 4+ star picks in the 10 recommendations of users under 30 within 0.05 of the 30-and-older group's?"
+      ],
+      "answer": 0.0571,
+      "answer_bool": false,
+      "tolerance": 0.005,
+      "answer_details": {
+        "proportion_x": 0.6528,
+        "proportion_y": 0.5957,
+        "k": 10,
+        "stars": 4,
+        "bound": 0.05
+      }
+    },
+    {
+      "id": "dp-07",
+      "question": "For users under 25 and users 45 or older, is the average share of their top 10 recommendations predicted at 4 stars or higher no more than 5 percentage points, or 0.05, apart?",
+      "params": {
+        "group_x": {
+          "attribute": "age",
+          "min": 0,
+          "max": 24
+        },
+        "group_y": {
+          "attribute": "age",
+          "min": 45,
+          "max": 200
+        },
+        "k": 10,
+        "stars": 4,
+        "bound": 0.05
+      },
+      "paraphrases": [
+        "Take our youngest cohort, users under 25, and our oldest, users 45 and up. Do both see the same fraction of their 10 recommendations that they'd rate at 4 stars or more, with a tolerance of 0.05?",
+        "Youngest against oldest, please: under-25s versus the 45-and-older group. Is the portion of their 10-item slates predicted to earn at least 4 stars within 5% between the two?",
+        "How do users under 25 stack up against users 45 and older on the share of their 10 recommendations predicted at 4 stars or higher? I'd consider a gap of up to 0.05 acceptable.",
+        "Compare the youngest segment (under 25) with the oldest (45 and older): do they get the same share of their 10 recommendations that they'd rate at least 4 stars, give or take at most 0.05?"
+      ],
+      "answer": 0.0835,
+      "answer_bool": false,
+      "tolerance": 0.005,
+      "answer_details": {
+        "proportion_x": 0.6577,
+        "proportion_y": 0.5741,
+        "k": 10,
+        "stars": 4,
+        "bound": 0.05
+      }
+    },
+    {
+      "id": "dp-08",
+      "question": "For students and engineers, is the average share of their top 10 recommendations predicted at 4 stars or higher no more than 5 percentage points, or 0.05, apart?",
+      "params": {
+        "group_x": {
+          "attribute": "occupation",
+          "value": "student"
+        },
+        "group_y": {
+          "attribute": "occupation",
+          "value": "engineer"
+        },
+        "k": 10,
+        "stars": 4,
+        "bound": 0.05
+      },
+      "paraphrases": [
+        "Occupation check: do students and engineers get slates of equal quality, meaning the fraction of their 10 recommendations predicted at 4 stars or higher differs by no more than 0.05?",
+        "I'd like to compare two professions. For students versus engineers, is the share of 4-star-or-better predictions among their 10 recommendations within 5% of each other?",
+        "Are engineers and students seeing comparably good lists? Specifically, does the proportion of their 10 recommended items forecast at 4 stars or above stay within 0.05 between the groups?",
+        "Do students and engineers see equally satisfying slates - that is, proportions of predicted 4-star-plus picks among their 10 recommendations within 0.05 of each other?"
+      ],
+      "answer": 0.101,
+      "answer_bool": false,
+      "tolerance": 0.005,
+      "answer_details": {
+        "proportion_x": 0.6408,
+        "proportion_y": 0.7418,
+        "k": 10,
+        "stars": 4,
+        "bound": 0.05
+      }
+    },
+    {
+      "id": "dp-09",
+      "question": "For students and retired users, is the average share of their top 10 recommendations predicted at 4 stars or higher no more than 10 percentage points, or 0.10, apart?",
+      "params": {
+        "group_x": {
+          "attribute": "occupation",
+          "value": "student"
+        },
+        "group_y": {
+          "attribute": "occupation",
+          "value": "retired"
+        },
+        "k": 10,
+        "stars": 4,
+        "bound": 0.1
+      },
+      "paraphrases": [
+        "Being lenient with a 0.1 tolerance: do students and retired users receive similar fractions of 4-or-better-star recommendations in their 10-item lists?",
+        "Loosen the tolerance to 10% and tell me whether students and retirees end up with comparable portions of their 10 recommendations predicted at 4 stars or higher.",
+        "With a fairly relaxed allowance of 0.1, is the fraction of 4+ star picks in a list of 10 about the same for retired users as for students?",
+        "With a loose tolerance of 0.1, are students and retired users getting comparable fractions of 4+ star recommendations in their lists of 10?"
+      ],
+      "answer": 0.1765,
+      "answer_bool": false,
+      "tolerance": 0.005,
+      "answer_details": {
+        "proportion_x": 0.6408,
+        "proportion_y": 0.4643,
+        "k": 10,
+        "stars": 4,
+        "bound": 0.1
+      }
+    },
+    {
+      "id": "dp-10",
+      "question": "For educators and programmers, is the average share of their top 10 recommendations predicted at 4 stars or higher no more than 5 percentage points, or 0.05, apart?",
+      "params": {
+        "group_x": {
+          "attribute": "occupation",
+          "value": "educator"
+        },
+        "group_y": {
+          "attribute": "occupation",
+          "value": "programmer"
+        },
+        "k": 10,
+        "stars": 4,
+        "bound": 0.05
+      },
+      "paraphrases": [
+        "Teachers side by side with programmers: does each group's 10-item list contain the same fraction of films predicted at 4 stars or better, to within 0.05?",
+        "Two occupations to compare, educators and programmers. Is the proportion of movies predicted at 4 stars or higher within their lists of 10 within 5% across the two?",
+        "Do educators and programmers get equivalent slates? I mean the share of the 10 recommended movies predicted to reach at least 4 stars, with a permitted difference of 0.05.",
+        "Educators versus programmers: do their 10-item lists carry the same share of movies predicted at 4 stars or better, within 0.05?"
+      ],
+      "answer": 0.0427,
+      "answer_bool": true,
+      "tolerance": 0.005,
+      "answer_details": {
+        "proportion_x": 0.6179,
+        "proportion_y": 0.6606,
+        "k": 10,
+        "stars": 4,
+        "bound": 0.05
+      }
+    }
+  ]
+}

@@ -38,6 +38,12 @@ optimization or the modification schema.
   `run_modification` still raises; experiment code should see raw errors.
 - `data/` is downloaded, git-ignored; never commit datasets.
 - `archive/` holds the superseded persona-based case-study notes; don't edit.
+- `datasets/` holds measurement-query evaluation sets. Ground truth is
+  computed by `explainrec/metrics.py` (never hand-typed); regenerate with
+  `datasets/build_llm_eval_dataset.py` when the baseline changes. Grade with
+  `explainrec.eval.measurement.grade_answer`. These queries need a
+  measurement tool the pipeline does not have yet — they are not
+  `Modification`s.
 - Demos live under `demo/`: `demo/notebooks/demo.ipynb` (regenerate with
   `demo/notebooks/build_demo.py`, then execute with nbclient) and
   `demo/server.py` (stdlib web demo, pipeline kept warm in memory; the

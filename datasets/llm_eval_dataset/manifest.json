@@ -1,0 +1,20 @@
+{
+  "dataset": "llm_eval_dataset",
+  "purpose": "Evaluate whether the LLM maps a stakeholder query to the correct measurement tool (+ parameters/metric) and returns the correct value.",
+  "sets": [
+    "coverage-disparity-v1",
+    "coverage-v1",
+    "benefit-inequality-v1",
+    "group-coverage-gap-v1",
+    "demographic-parity-v1",
+    "worst-group-v1"
+  ],
+  "grading": "explainrec.eval.measurement.grade_answer",
+  "context": {
+    "scenario": "baseline: maximize total predicted rating; every cold item (<=20 ratings) reaches >=5 users; slate size 10",
+    "solution_cache": "solution-1dd476b37aead596.pkl",
+    "n_users": 943,
+    "n_items": 1682
+  },
+  "version": "1.0"
+}

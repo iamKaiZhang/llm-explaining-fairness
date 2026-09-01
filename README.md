@@ -95,6 +95,8 @@ live in the Obsidian vault (`05_Projects/LLM Explanation/`).
 | `demo/notebooks/demo.ipynb` | Executed demo walkthrough |
 | `demo/server.py` | Local web demo (stdlib HTTP server + single page) |
 | `docs/architecture.md` | Formulation, module map, extension guide |
+| `datasets/` | Measurement-query evaluation datasets with computed ground truth (see its README) |
+| `experiments/queries.yaml` | Gold modifications for the interpreter projection eval |
 | `data/` | MovieLens 100k, downloaded on first run (git-ignored) |
 | `archive/` | Earlier persona-based case-study notes (superseded) |
 

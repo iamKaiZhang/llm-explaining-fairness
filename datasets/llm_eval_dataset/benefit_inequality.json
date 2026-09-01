@@ -1,0 +1,246 @@
+{
+  "set_id": "benefit-inequality-v1",
+  "definition": "Generalized cross-entropy (GCE, Deldjoo et al. 2019): system- level inequality in benefit across consumers with respect to a per-user accuracy metric. beta = 0.5, fair distribution = uniform; 0 = perfectly equal, more negative = more unequal. Per-user metrics are in-sample (no train/test split yet): MAE/RMSE over each user's observed ratings; nDCG/Precision/Recall at k=10 over each user's observed items ranked by predicted rating, relevance = rating >= 4.",
+  "template": "How much inequality is there across users with respect to {{USER_METRIC}}?",
+  "expected_tool": "benefit_inequality",
+  "implementation": "explainrec.metrics.benefit_inequality",
+  "counterfactual": false,
+  "context": {
+    "scenario": "baseline: maximize total predicted rating; every cold item (<=20 ratings) reaches >=5 users; slate size 10",
+    "solution_cache": "solution-1dd476b37aead596.pkl",
+    "n_users": 943,
+    "n_items": 1682
+  },
+  "questions": [
+    {
+      "id": "bi-01",
+      "question": "How uneven is MAE across users?",
+      "params": {
+        "metric": "MAE"
+      },
+      "expected_metric": "MAE",
+      "paraphrases": [
+        "Break MAE down user by user for me: how wide is the gap in prediction quality between our best-served and worst-served users?",
+        "For the audit record, please quantify the degree of inequality in per-user MAE across the entire user base.",
+        "Honestly, one average MAE tells me nothing. If you compute it separately for each user, how unequal does prediction accuracy look across everyone?",
+        "Looking at MAE per user, how unequal is prediction quality across our user base?"
+      ],
+      "answer": -0.02534,
+      "tolerance": 0.002,
+      "answer_details": {
+        "n_users": 943,
+        "metric": "MAE",
+        "beta": 0.5,
+        "k": 10,
+        "mean": 0.6881
+      }
+    },
+    {
+      "id": "bi-02",
+      "question": "How uneven across users is the average size of each person's prediction miss?",
+      "params": {
+        "metric": "MAE"
+      },
+      "expected_metric": "MAE",
+      "paraphrases": [
+        "Sometimes the guess for what I'd give a movie is a full star off or worse. If you just take each person's typical size of miss as it stands, is everyone off by about the same amount, or do some of us get much sloppier guesses?",
+        "Predicted ratings can deviate from the true rating by a star or more. Treating each user's average deviation at face value, with no extra weight on the bigger misses, is that error roughly uniform across users, or do certain users get substantially worse guesses?",
+        "Your rating guesses can miss by a star or more. Average each user's misses straight up, no penalties for the big ones, and tell me: is that error burden about equal for everybody, or are some users stuck with far worse predictions than others?",
+        "When the system guesses how someone would rate a movie, it can be off by a star or more. Taking each user's average miss at face value, is that error about the same size for everyone, or do some users get much sloppier guesses?"
+      ],
+      "answer": -0.02534,
+      "tolerance": 0.002,
+      "answer_details": {
+        "n_users": 943,
+        "metric": "MAE",
+        "beta": 0.5,
+        "k": 10,
+        "mean": 0.6881
+      }
+    },
+    {
+      "id": "bi-03",
+      "question": "How uneven is RMSE across users?",
+      "params": {
+        "metric": "RMSE"
+      },
+      "expected_metric": "RMSE",
+      "paraphrases": [
+        "In terms of RMSE, how unequally is it spread across our users?",
+        "Could you report the level of user-to-user inequality in RMSE?",
+        "Users don't all get the same RMSE, obviously. How big is the inequality across them?",
+        "How much inequality is there across users in RMSE?"
+      ],
+      "answer": -0.02141,
+      "tolerance": 0.002,
+      "answer_details": {
+        "n_users": 943,
+        "metric": "RMSE",
+        "beta": 0.5,
+        "k": 10,
+        "mean": 0.8528
+      }
+    },
+    {
+      "id": "bi-04",
+      "question": "How uneven across users is their prediction error when big misses count extra?",
+      "params": {
+        "metric": "RMSE"
+      },
+      "expected_metric": "RMSE",
+      "paraphrases": [
+        "Small misses don't worry me; it's the occasional wildly wrong prediction that does. If each user's predictions are scored in a way that penalizes large misses disproportionately, is that error load shared evenly across users?",
+        "For compliance purposes, please score each user's prediction error under a scheme that weights big misses much more heavily than small ones, then tell me whether that burden is distributed equitably across the user base.",
+        "I don't mind being off by a hair, but the occasional way-off prediction bugs me. Grade each user so that the huge misses hurt the score extra, then say whether that pain is spread evenly over the users or dumped on a few.",
+        "I care less about small errors and more about the occasional wildly wrong prediction. If we score each user's predictions in a way that punishes big misses extra heavily, is that error burden shared evenly across users?"
+      ],
+      "answer": -0.02141,
+      "tolerance": 0.002,
+      "answer_details": {
+        "n_users": 943,
+        "metric": "RMSE",
+        "beta": 0.5,
+        "k": 10,
+        "mean": 0.8528
+      }
+    },
+    {
+      "id": "bi-05",
+      "question": "How uneven is the quality of users' lists when a list scores better for putting good matches near the top?",
+      "params": {
+        "metric": "nDCG"
+      },
+      "expected_metric": "nDCG",
+      "paraphrases": [
+        "Position matters, not just the contents of the list: are some users' strongest matches buried near the bottom while other users see theirs right up top? How unequal is that across the user base?",
+        "As a catalog partner I want to know whether ordering is consistent: for some users the best-fitting titles sit far down the list, for others they lead it. How much does that vary from user to user?",
+        "It bugs me that what's in my list matters less than where it sits. Do certain people get their best matches shoved way down while others get them first? How uneven is that across everyone?",
+        "It's not just what's in the list, it's the order: do some users get their best matches buried far down while others see them right at the top? How unequal is that across users?"
+      ],
+      "answer": -0.01575,
+      "tolerance": 0.002,
+      "answer_details": {
+        "n_users": 942,
+        "metric": "nDCG",
+        "beta": 0.5,
+        "k": 10,
+        "mean": 0.8878
+      }
+    },
+    {
+      "id": "bi-06",
+      "question": "Do some users get much better lists than others when good matches ranked near the top matter most?",
+      "params": {
+        "metric": "nDCG"
+      },
+      "expected_metric": "nDCG",
+      "paraphrases": [
+        "Grade each user's list on how well it's ordered, giving far more credit for good items near the top than for ones buried lower. Is that ordering quality distributed fairly across the user base?",
+        "Please assign every user a score reflecting the sortedness of their list, weighting hits at the top substantially above hits further down, and report whether that score is equitably distributed across users.",
+        "Give each user a number for how nicely their list is sorted, where a hit at the top counts for way more than one near the bottom. Does that come out fair across all the users, or not?",
+        "Score each user by how well their list is sorted, rewarding hits near the top much more than hits further down. Is that ranking quality distributed fairly across the user base?"
+      ],
+      "answer": -0.01575,
+      "tolerance": 0.002,
+      "answer_details": {
+        "n_users": 942,
+        "metric": "nDCG",
+        "beta": 0.5,
+        "k": 10,
+        "mean": 0.8878
+      }
+    },
+    {
+      "id": "bi-07",
+      "question": "How uneven across users is the share of a user's top 10 movies that they would like?",
+      "params": {
+        "metric": "Precision"
+      },
+      "expected_metric": "Precision",
+      "paraphrases": [
+        "Of the ten items in each user's top list, what fraction would they actually enjoy? Is that fraction similar for everyone, or does a lucky handful get most of the good stuff?",
+        "For each user, take the proportion of their top ten that they would genuinely like. Is that proportion comparable across the user base, or is it concentrated among a small group?",
+        "So out of the ten things you show me, how many are ones I'd actually want? And does everybody get roughly the same ratio, or do a few lucky users soak up most of the wins?",
+        "Consider the share of each user's top ten that they would actually like. Do all users get a similar hit rate, or is it concentrated on a lucky few?"
+      ],
+      "answer": -0.02433,
+      "tolerance": 0.002,
+      "answer_details": {
+        "n_users": 943,
+        "metric": "Precision",
+        "beta": 0.5,
+        "k": 10,
+        "mean": 0.865
+      }
+    },
+    {
+      "id": "bi-08",
+      "question": "How uneven is Precision across users?",
+      "params": {
+        "metric": "Precision"
+      },
+      "expected_metric": "Precision",
+      "paraphrases": [
+        "How unequally is Precision distributed across our users?",
+        "Please report the extent of inequality in Precision across the user base.",
+        "Precision, per user: how lopsided is it?",
+        "How unequal is Precision across users?"
+      ],
+      "answer": -0.02433,
+      "tolerance": 0.002,
+      "answer_details": {
+        "n_users": 943,
+        "metric": "Precision",
+        "beta": 0.5,
+        "k": 10,
+        "mean": 0.865
+      }
+    },
+    {
+      "id": "bi-09",
+      "question": "How uneven across users is the share of the movies they would love that make it into their top list?",
+      "params": {
+        "metric": "Recall"
+      },
+      "expected_metric": "Recall",
+      "paraphrases": [
+        "Users keep telling us that most of the movies they love never show up in their top list at all. Of the movies a given user loves, the portion that actually surfaces: is it spread evenly, or do a few users get most of theirs while others get almost none?",
+        "A recurring complaint is that loved titles never make the top list. For each user, consider what portion of their loved movies actually appears there. Is that portion distributed evenly across users, or captured mostly by a small number of them?",
+        "Half my favorites never even make my list. Take the slice of a person's loved movies that does turn up, and tell me whether that slice is even across users, or whether a lucky few get most of theirs while the rest get next to nothing.",
+        "Some users tell us most movies they love never make it into their top list at all. Is the share of a user's loved movies that actually surfaces spread evenly, or do a few users get most of theirs while others get almost none?"
+      ],
+      "answer": -0.25832,
+      "tolerance": 0.0129162198133711,
+      "answer_details": {
+        "n_users": 942,
+        "metric": "Recall",
+        "beta": 0.5,
+        "k": 10,
+        "mean": 0.2851
+      }
+    },
+    {
+      "id": "bi-10",
+      "question": "Do some users get a much larger share of the movies they would love in their top list than others?",
+      "params": {
+        "metric": "Recall"
+      },
+      "expected_metric": "Recall",
+      "paraphrases": [
+        "For every user, look at what portion of everything they'd rate highly actually makes it into their top recommendations. How uneven is that portion across the user base?",
+        "Please compute, per user, the fraction of all items they would rate highly that ends up captured in their top recommendations, then characterize how unequal that fraction is across users.",
+        "Per person, how much of the stuff they'd rate highly actually ends up in their top recommendations? And how unevenly does that land across all our users?",
+        "For each user, think of how much of everything they would rate highly ends up captured in their top recommendations. How uneven is that capture rate across users?"
+      ],
+      "answer": -0.25832,
+      "tolerance": 0.0129162198133711,
+      "answer_details": {
+        "n_users": 942,
+        "metric": "Recall",
+        "beta": 0.5,
+        "k": 10,
+        "mean": 0.2851
+      }
+    }
+  ]
+}
